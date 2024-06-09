@@ -1,0 +1,4122 @@
+text,response
+"Contents lists available at ScienceDirect
+
+Journal of Systems Architecture
+
+journal homepage: www.elsevier.com/locate/sysarc
+
+CoAxNN: Optimizing on-device deep learning with conditional approximate
+neural networks
+Guangli Li a,b,1, Xiu Ma c,d,1, Qiuchu Yu a,b, Lei Liu c,d, Huaxiao Liu c,d, Xueying Wang a,b,∗
+a State Key Lab of Processors, Institute of Computing Technology, Chinese Academy of Sciences, Beijing, China
+b University of Chinese Academy of Sciences, Beijing, China
+c College of Computer Science and Technology, Jilin University, Changchun, China
+d MOE Key Laboratory of Symbolic Computation and Knowledge Engineering, Jilin University, Changchun, China
+
+A R T I C L E I N F O
+
+A B S T R A C T
+
+Keywords:
+On-device deep learning
+Efficient neural networks
+Model approximation and optimization
+
+While deep neural networks have achieved superior performance in a variety of intelligent applications, the
+increasing computational complexity makes them difficult to be deployed on resource-constrained devices. To","Question 1: What is the main contribution of the paper?
+Answer 1: The paper proposes a new method for optimizing on-device deep learning with conditional approximate neural networks.
+
+     Question 2: What are the keywords associated with this article?
+Answer 2: The keywords associated with this article are on-device deep learning, efficient neural networks, model approximation and optimization.
+
+     Question 3: What is the main goal of the paper?
+Answer 3: The main goal of the paper is to develop a new method for deploying deep neural networks on resource-constrained devices while reducing their computational complexity."
+"Efficient neural networks
+Model approximation and optimization
+
+While deep neural networks have achieved superior performance in a variety of intelligent applications, the
+increasing computational complexity makes them difficult to be deployed on resource-constrained devices. To
+improve the performance of on-device inference, prior studies have explored various approximate strategies,
+such as neural network pruning, to optimize models based on different principles. However, when combining
+these approximate strategies, a large parameter space needs to be explored. Meanwhile, different configuration
+parameters may interfere with each other, damaging the performance optimization effect. In this paper, we
+propose a novel model optimization framework, CoAxNN, which effectively combines different approximate
+strategies, to facilitate on-device deep learning via model approximation. Based on the principles of different","Question 1: What are the approximate strategies used in the study?
+Answer 1: Neural network pruning.
+
+     Question 2: What is the purpose of combining different approximate strategies?
+Answer 2: To improve the performance of on-device inference.
+
+     Question 3: What is the proposed model optimization framework called?
+Answer 3: CoAxNN."
+"propose a novel model optimization framework, CoAxNN, which effectively combines different approximate
+strategies, to facilitate on-device deep learning via model approximation. Based on the principles of different
+approximate optimizations, our approach constructs the design space and automatically finds reasonable
+configurations through genetic algorithm-based design space exploration. By combining the strengths of
+different approximation methods, CoAxNN enables efficient conditional inference for models at runtime. We
+evaluate our approach by leveraging state-of-the-art neural networks on a representative intelligent edge
+platform, Jetson AGX Orin. The experimental results demonstrate the effectiveness of CoAxNN, which achieves
+up to 1.53× speedup while reducing energy by up to 34.61%, with trivial accuracy loss on CIFAR-10/100 and
+CINIC-10 datasets.
+
+1. Introduction
+
+Convolutional neural networks (CNNs) have achieved remarkable
+success in various intelligent tasks such as image classification [1].","Question: What is the main goal of the proposed model optimization framework?
+Answer: The main goal of the proposed model optimization framework is to effectively combine different approximate strategies to facilitate on-device deep learning via model approximation.
+
+2. Question: What are the principles of different approximate optimizations used in the proposed approach?
+Answer: The principles of different approximate optimizations used in the proposed approach include the use of different approximation methods such as quantization, pruning, and knowledge distillation.
+
+3. Question: What is the effectiveness of CoAxNN according to the experimental results?
+Answer: The effectiveness of CoAxNN is demonstrated through experimental results, which show that it achieves up to 1.53× speedup while reducing energy by up to 34.61%, with trivial accuracy loss on CIFAR-10/100 and CINIC-10 datasets."
+"up to 1.53× speedup while reducing energy by up to 34.61%, with trivial accuracy loss on CIFAR-10/100 and
+CINIC-10 datasets.
+
+1. Introduction
+
+Convolutional neural networks (CNNs) have achieved remarkable
+success in various intelligent tasks such as image classification [1].
+To pursue superior performance on complex intelligent tasks, CNNs
+are becoming wider and deeper, leading to tremendous computational
+costs and expensive energy consumption for model execution. Recently,
+on-device deep learning has been a mainstay due to its immeasurable
+potential for privacy protection and real-time response. However, it is
+hard to deploy complicated neural network models on edge devices due
+to the limited resources.
+
+Many efforts have been made to enable efficient on-device deep
+learning via model approximation. For instance, pruning-based strategies [2] compress a neural network model by reducing redundant
+neurons and connections and quantization-based methods [3] improve","Question 1: What is the main goal of the text?
+Answer 1: The main goal of the text is to introduce a new approach for efficient on-device deep learning.
+
+     Question 2: What are the limitations of current deep learning models?
+Answer 2: Current deep learning models are becoming wider and deeper, leading to tremendous computational costs and expensive energy consumption for model execution.
+
+     Question 3: What are the potential benefits of on-device deep learning?
+Answer 3: On-device deep learning has the potential for privacy protection and real-time response."
+"to the limited resources.
+
+Many efforts have been made to enable efficient on-device deep
+learning via model approximation. For instance, pruning-based strategies [2] compress a neural network model by reducing redundant
+neurons and connections and quantization-based methods [3] improve
+
+the efficiency of model execution by leveraging low-precision computations. In addition to these model compression techniques, emerging
+staging-based approximate strategies, such as early exiting, improve
+model performance by conditional execution at runtime.
+
+While these methods optimize the deep neural network models from
+different directions, we found that it is still a challenging problem
+to effectively combine them (as described in Section 2.4). To achieve
+efficient on-device inference, it is needed to take full advantage of the
+superiority of different optimization strategies. Different approximate
+strategies, based on distinct principles, have their own configuration","Question 1: What are the efforts made to enable efficient on-device deep learning?
+Answer 1: Pruning-based strategies and quantization-based methods.
+
+Question 2: What are the challenges in combining different optimization strategies?
+Answer 2: It is still a challenging problem to effectively combine them.
+
+Question 3: What are the approximate strategies based on distinct principles?
+Answer 3: Emerging staging-based approximate strategies."
+"to effectively combine them (as described in Section 2.4). To achieve
+efficient on-device inference, it is needed to take full advantage of the
+superiority of different optimization strategies. Different approximate
+strategies, based on distinct principles, have their own configuration
+parameters. When combining different strategies, the configuration
+parameters of different strategies may affect each other, influencing the
+optimization effect of the model, and even leading to poor optimization
+results. As such, this paper aims to address the following challenging
+problem: How to design an efficient model optimization framework to make
+
+∗ Corresponding author at: State Key Lab of Processors, Institute of Computing Technology, Chinese Academy of Sciences, Beijing, China.
+
+E-mail addresses:
+
+liguangli@ict.ac.cn (G. Li), maxiu18@mails.jlu.edu.cn (X. Ma), yuqiuchu19@mails.ucas.ac.cn (Q. Yu), liulei@jlu.edu.cn (L. Liu),
+
+liuhuaxiao@jlu.edu.cn (H. Liu), wangxueying@ict.ac.cn (X. Wang).","Question 1: What is the main aim of this paper?
+Answer 1: The main aim of this paper is to address the challenging problem of designing an efficient model optimization framework to make full advantage of the superiority of different optimization strategies.
+
+     Question 2: What is the key issue in combining different strategies?
+Answer 2: The key issue in combining different strategies is that the configuration parameters of different strategies may affect each other, influencing the optimization effect of the model, and even leading to poor optimization results.
+
+     Question 3: Who are the corresponding authors of this paper?
+Answer 3: The corresponding authors of this paper are G. Li, X. Ma, Q. Yu, L. Liu, H. Liu, and W. Xueying."
+"E-mail addresses:
+
+liguangli@ict.ac.cn (G. Li), maxiu18@mails.jlu.edu.cn (X. Ma), yuqiuchu19@mails.ucas.ac.cn (Q. Yu), liulei@jlu.edu.cn (L. Liu),
+
+liuhuaxiao@jlu.edu.cn (H. Liu), wangxueying@ict.ac.cn (X. Wang).
+
+1 Guangli Li and Xiu Ma contributed equally to this work.
+
+https://doi.org/10.1016/j.sysarc.2023.102978
+Received 24 April 2023; Received in revised form 18 July 2023; Accepted 23 August 2023
+
+JournalofSystemsArchitecture143(2023)102978Availableonline25August20231383-7621/©2023ElsevierB.V.Allrightsreserved.G. Li et al.
+
+full use of various model approximate strategies, so as to optimize on-device
+deep learning while meeting accuracy requirements?
+
+In this paper, we present a novel neural network optimization
+framework, CoAxNN (Conditional Approximate Neural Networks),
+which effectively combines staging-based and pruning-based approximate strategies, for efficient on-device deep learning. The stagingbased approximate strategy optimizes the model structure as multiple","Question 1: Who contributed equally to this work?
+Answer 1: Guangli Li and Xiu Ma.
+
+     Question 2: When was this work received in revised form?
+Answer 2: Received in revised form on 18 July 2023.
+
+     Question 3: What is the novel neural network optimization framework presented in this paper?
+Answer 3: CoAxNN (Conditional Approximate Neural Networks)."
+"framework, CoAxNN (Conditional Approximate Neural Networks),
+which effectively combines staging-based and pruning-based approximate strategies, for efficient on-device deep learning. The stagingbased approximate strategy optimizes the model structure as multiple
+stages with different complexities by attaching multiple exit branches,
+whereas the pruning-based approximate strategy compresses the model
+parameters according to the importance of filters. CoAxNN takes account of both their optimization principles and automatically searches
+for reasonable configuration parameters to construct a compressed
+multi-stage neural network model, thus taking full advantage of the
+superiority of different approximate strategies to achieve efficient
+model optimization. The optimization techniques, including pruning
+and staging, have been studied individually in the past; the key novelty
+of our work is to provide an effective and efficient mechanism to
+combine them, so as to optimize the neural network performance with","Question 1: What is the main idea of the text?
+Answer 1: The main idea of the text is that the authors have developed a new deep learning framework called CoAxNN, which combines staging-based and pruning-based approximate strategies for efficient on-device deep learning.
+
+     Question 2: What are the two main optimization techniques used in CoAxNN?
+Answer 2: The two main optimization techniques used in CoAxNN are pruning and staging.
+
+     Question 3: What is the key novelty of CoAxNN compared to previous work?
+Answer 3: The key novelty of CoAxNN is that it provides an effective and efficient mechanism to combine pruning and staging, allowing for more efficient model optimization."
+"model optimization. The optimization techniques, including pruning
+and staging, have been studied individually in the past; the key novelty
+of our work is to provide an effective and efficient mechanism to
+combine them, so as to optimize the neural network performance with
+a reasonable configuration, for a given task and a platform.
+The main contributions of this paper are as follows:
+
+• We present a novel neural network optimization framework,
+namely CoAxNN, which effectively combines staging-based and
+pruning-based approximate strategies, thereby improving actual
+performance while meeting accuracy requirements, for efficient
+on-device model inference.
+
+• According to the principles of staging-based and pruning-based
+approximate strategies, our framework constructs the design
+space, and automatically searches for reasonable configuration
+parameters, including the number of stages, the position of stages,
+the threshold of stages, and the pruning rate, so as to make","Question 1: What are the optimization techniques studied in the paper?
+Answer 1: The optimization techniques studied in the paper include pruning and staging.
+
+     Question 2: What is the main contribution of the paper?
+Answer 2: The main contribution of the paper is the presentation of a novel neural network optimization framework, CoAxNN, which effectively combines staging-based and pruning-based approximate strategies to improve actual performance while meeting accuracy requirements for efficient on-device model inference.
+
+     Question 3: How does the framework construct the design space?
+Answer 3: According to the principles of staging-based and pruning-based approximate strategies, the framework constructs the design space and automatically searches for reasonable configuration parameters, including the number of stages, the position of stages, the threshold of stages, and the pruning rate, so as to make efficient on-device model inference."
+"approximate strategies, our framework constructs the design
+space, and automatically searches for reasonable configuration
+parameters, including the number of stages, the position of stages,
+the threshold of stages, and the pruning rate, so as to make
+full use of the advantages of both to achieve efficient model
+optimization.
+
+• We validate the effectiveness of CoAxNN by optimizing state-ofthe-art deep neural networks on a commercial edge device, Jetson
+AGX Orin, in terms of prediction accuracy, execution latency, and
+energy consumption, and experimental results show that CoAxNN
+can significantly improve the performance of model inference
+with trivial accuracy loss.
+
+The rest of the paper is organized as follows. The background and
+motivation are introduced in Section 2. The details of our optimization
+framework are described in Section 3. The experimental evaluation
+is conducted in Section 4. A discussion is given in Section 5. The
+conclusion is presented in Section 6.
+
+2. Background and motivation","Question 1: What is the main goal of CoAxNN?
+Answer 1: The main goal of CoAxNN is to achieve efficient model optimization by making full use of the advantages of both approximate strategies and the design space.
+
+Question 2: What does the phrase ""trivial accuracy loss"" mean in the context of the paper?
+Answer 2: In the context of the paper, the phrase ""trivial accuracy loss"" means that the performance of the optimized model is very close to the performance of the state-of-the-art model, with only a small difference in accuracy.
+
+Question 3: What is the main contribution of the paper?
+Answer 3: The main contribution of the paper is the development of a novel optimization framework that can significantly improve the performance of model inference on commercial edge devices, such as Jetson AGX Orin, by leveraging approximate strategies and the design space."
+"motivation are introduced in Section 2. The details of our optimization
+framework are described in Section 3. The experimental evaluation
+is conducted in Section 4. A discussion is given in Section 5. The
+conclusion is presented in Section 6.
+
+2. Background and motivation
+
+2.1. Pruning-based approximation
+
+Neural network pruning, one of the most representative model compression techniques, approximates the original neural network model
+by reducing redundant neurons or connections making less contribution to model performance. Most previous works on pruning-based
+approximation can be roughly divided into two categories: unstructured
+pruning and structured pruning.
+
+Prior works on weight pruning [4,5] achieve high non-structured
+sparsity of pruned models by removing single parameters in a filter. Guo et al. [4] and Hal et al. [5] used magnitude-based pruning
+methods, which eliminate weights with the smallest magnitude. Guo
+et al. [4] proposed dynamic network surgery to reduce the network","Question 1: What is the main idea of the text?
+Answer 1: The main idea of the text is to introduce a new optimization framework for neural network models.
+
+     Question 2: What are the details of the optimization framework described in Section 3?
+Answer 2: The details of the optimization framework described in Section 3 are the pruning-based approximation and the structured pruning.
+
+     Question 3: What is the purpose of the experimental evaluation in Section 4?
+Answer 3: The purpose of the experimental evaluation in Section 4 is to evaluate the performance of the optimized models."
+"sparsity of pruned models by removing single parameters in a filter. Guo et al. [4] and Hal et al. [5] used magnitude-based pruning
+methods, which eliminate weights with the smallest magnitude. Guo
+et al. [4] proposed dynamic network surgery to reduce the network
+complexity by making on-the-fly connection pruning. Hal et al. [5]
+pruned low-weight connections to reduce the storage and computation
+demands by an order of magnitude. Some pruning research groups
+utilize first-order or second-order derivatives of the loss function with
+respect to the weights [6,7]. Hassibi et al. [6] proposed Optimal Brain
+Damage (OBD), which uses all second-order derivatives of the loss
+
+function to prune single non-essential weights. Optimal Brain Surgeon
+(OBS) [7] have optimized the OBD method, which considers the condition that the Hessian matrix is non-diagonal. These approaches show
+attractive theoretical performance improvement but are difficult to
+be supported by existing software and hardware. Unstructured sparse","Question 1: What are the two methods of pruning used in the text?
+Answer 1: Magnitude-based pruning and dynamic network surgery.
+
+     Question 2: What is the purpose of pruning according to the text?
+Answer 2: To reduce the storage and computation demands by an order of magnitude.
+
+     Question 3: What are two approaches used for pruning according to the text?
+Answer 3: Optimal Brain Damage (OBD) and Optimal Brain Surgeon (OBS)."
+"(OBS) [7] have optimized the OBD method, which considers the condition that the Hessian matrix is non-diagonal. These approaches show
+attractive theoretical performance improvement but are difficult to
+be supported by existing software and hardware. Unstructured sparse
+models require specific matrix multiplication calculations and storage formats, which can hardly leverage existing high-efficiency BLAS
+libraries.
+
+Unlike the early efforts on unstructured pruning that may cause
+irregular calculation patterns, structured pruning reduces redundant
+computations on unimportant filters or channels to produce a structured sparse model. The corresponding feature maps can be deleted as
+the filters are pruned. Therefore, much recent work has focused on filter
+pruning methods. SFP [2] and ASFP [8] dynamically pruned the filters
+in a soft manner, which zeroizes the unimportant filters and keeps
+updating them in the training stage. Li et al. [9] presented a fusion-","Question 1: What are the main challenges in optimizing the OBD method?
+Answer 1: The main challenges in optimizing the OBD method are the condition that the Hessian matrix is non-diagonal and the difficulty in supporting these approaches with existing software and hardware.
+
+     Question 2: What are unstructured sparse models?
+Answer 2: Unstructured sparse models are models that require specific matrix multiplication calculations and storage formats, which can hardly leverage existing high-efficiency BLAS libraries.
+
+     Question 3: What are filter pruning methods?
+Answer 3: Filter pruning methods are methods that dynamically prune filters in a soft manner, which zeroizes the unimportant filters and keeps updating them in the training stage."
+"the filters are pruned. Therefore, much recent work has focused on filter
+pruning methods. SFP [2] and ASFP [8] dynamically pruned the filters
+in a soft manner, which zeroizes the unimportant filters and keeps
+updating them in the training stage. Li et al. [9] presented a fusioncatalyzed filter pruning approach, which simultaneously optimizes the
+parametric and non-parametric operators. Luo et al. [10] pruned filters
+based on statistics information computed from its next layer. The filters
+of different layers may have different influences on model prediction. Li
+et al. [11] proposed a flexible-rate filter pruning approach, FlexPruner,
+which automatically selects the number of filters to be pruned for
+each layer. Plochaet et al. [12] introduced a hardware-aware pruning
+method with the goal of decreasing the inference time for FPGA deep
+learning accelerators, adaptively pruning the neural network based on
+the size of the systolic array used to calculate the convolutions. To","Question 1: What is the main focus of much recent work in deep learning?
+Answer 1: The main focus of much recent work in deep learning is on filter pruning methods.
+
+     Question 2: What is the purpose of dynamically pruning filters in a soft manner?
+Answer 2: The purpose of dynamically pruning filters in a soft manner is to zeroize the unimportant filters and keep updating them in the training stage.
+
+     Question 3: What is the goal of Li et al.'s fusioncatalyzed filter pruning approach?
+Answer 3: The goal of Li et al.'s fusioncatalyzed filter pruning approach is to simultaneously optimize the parametric and non-parametric operators."
+"each layer. Plochaet et al. [12] introduced a hardware-aware pruning
+method with the goal of decreasing the inference time for FPGA deep
+learning accelerators, adaptively pruning the neural network based on
+the size of the systolic array used to calculate the convolutions. To
+preserve the robustness at a high sparsity ratio in structured pruning,
+Zhuang et al. [13] proposed an effective filter importance criterion to
+evaluate the importance of filters by estimating their contribution to
+the adversarial training loss. Besides, some researchers have found
+the value of network pruning in discovering the network architecture
+[14,15]. Liu et al. [14] demonstrated that in some cases pruning can
+be useful as an architecture search paradigm. Li et al. [15] proposed
+a random architecture search to find a good architecture given a
+pre-defined model by channel pruning. Li et al. [16] proposed an endto-end channel pruning method to search out the desired sub-network","Question 1: What is the goal of the hardware-aware pruning method introduced by Plochaet et al.?
+Answer 1: To decrease the inference time for FPGA deep learning accelerators by adaptively pruning the neural network based on the size of the systolic array used to calculate the convolutions.
+
+     Question 2: What is the importance criterion proposed by Zhuang et al. to evaluate the importance of filters in structured pruning?
+Answer 2: An effective filter importance criterion to estimate the contribution of filters to the adversarial training loss.
+
+     Question 3: Can pruning be useful as an architecture search paradigm?
+Answer 3: Yes, according to Liu et al., pruning can be useful as an architecture search paradigm in some cases."
+"be useful as an architecture search paradigm. Li et al. [15] proposed
+a random architecture search to find a good architecture given a
+pre-defined model by channel pruning. Li et al. [16] proposed an endto-end channel pruning method to search out the desired sub-network
+automatically and efficiently, which learns per-layer sparsity through
+depth-wise binary convolution. Ding et al. [17] presented a neural
+architecture search with pruning method, which derives the most potent model by removing trivial and redundant edges from the whole
+neural network topology. The structured sparse model can be perfectly
+supported by existing libraries to achieve a realistic acceleration. In
+this paper, we adopt filter pruning to realize practical performance
+improvement for neural network models.
+
+2.2. Staging-based approximation
+
+Prior studies [18,19] found that the difficulty of classifying an image
+in real-world scenarios is diverse. The easy samples can be classified","Question 1: What is the main contribution of Li et al. [15]?
+Answer: Li et al. [15] proposed a random architecture search to find a good architecture given a pre-defined model by channel pruning.
+
+     Question 2: What is the proposed method in Li et al. [16]?
+Answer: Li et al. [16] proposed an end-to-end channel pruning method to search out the desired sub-network automatically and efficiently, which learns per-layer sparsity through depth-wise binary convolution.
+
+     Question 3: What is the main contribution of Ding et al. [17]?
+Answer: Ding et al. [17] presented a neural architecture search with pruning method, which derives the most potent model by removing trivial and redundant edges from the whole neural network topology."
+"this paper, we adopt filter pruning to realize practical performance
+improvement for neural network models.
+
+2.2. Staging-based approximation
+
+Prior studies [18,19] found that the difficulty of classifying an image
+in real-world scenarios is diverse. The easy samples can be classified
+with low effort, and difficult samples consume more computation efforts for prediction. Staging-based approximate strategies, such as early
+exiting [18] and layer skipping [20], emerge as a prominent important
+technique for separating the classification of easy and hard inputs.
+The original neural network uses a fixed computation process for the
+prediction of all samples. Staging-based approximate strategies perform
+adaptive computing for samples according to conditions at run-time.
+Teerapittayanon et al. [18] demonstrated that the deep neural network
+with additional side branch classifiers can both improve accuracy and
+significantly reduce the inference time of the network. Panda et al. [19]","Question 1: What technique do the authors adopt to realize practical performance improvement for neural network models?
+Answer 1: Filter pruning.
+
+     Question 2: What are staging-based approximation techniques?
+Answer 2: Early exiting and layer skipping.
+
+     Question 3: What is the main idea of Teerapittayanon et al.'s work?
+Answer 3: That a deep neural network with additional side branch classifiers can both improve accuracy and significantly reduce the inference time of the network."
+"adaptive computing for samples according to conditions at run-time.
+Teerapittayanon et al. [18] demonstrated that the deep neural network
+with additional side branch classifiers can both improve accuracy and
+significantly reduce the inference time of the network. Panda et al. [19]
+proposed Conditional Deep Learning cascading a linear network for
+each convolutional layer and monitoring the output of the linear network to decide whether classification can be terminated at the current
+stage or not. Fang et al. [21] presented an input-adaptive framework
+for video analytics, which adopts an architecture search-based scheme
+to find the optimal architecture for each early exit branch. Wang
+
+JournalofSystemsArchitecture143(2023)1029782G. Li et al.
+
+et al. [22] designed dynamic layer-skipping mechanisms, which suppress unnecessary costs for easy samples and halt inference for all
+samples to meet resource constraints for the inference of more compli-","Question 1: What is adaptive computing?
+Answer 1: Adaptive computing is a technique that enables a system to adjust its computing resources according to the conditions at run-time.
+
+     Question 2: What did Teerapittayanon et al. demonstrate?
+Answer 2: Teerapittayanon et al. demonstrated that a deep neural network with additional side branch classifiers can both improve accuracy and significantly reduce the inference time of the network.
+
+     Question 3: What did Fang et al. present?
+Answer 3: Fang et al. presented an input-adaptive framework for video analytics, which adopts an architecture search-based scheme to find the optimal architecture for each early exit branch."
+"JournalofSystemsArchitecture143(2023)1029782G. Li et al.
+
+et al. [22] designed dynamic layer-skipping mechanisms, which suppress unnecessary costs for easy samples and halt inference for all
+samples to meet resource constraints for the inference of more complicated CNN backbones. Figurnov et al. [23] studied early termination in
+each residual unit of ResNets. Farhadi et al. [23] implemented an earlyexiting method on the FPGA platform using partial reconfiguration to
+reduce the amount of needed computation. Jayakodi et al. [24] used
+Bayesian Optimization to configure the early exit neural networks to
+trade off accuracy and energy. To reduce unnecessary intermediate
+calculations in the inference process of Branchynet, Liang et al. [25]
+directly determined the exit position of the sample in the multi-branch
+network according to the difficulty of the sample without intermediate
+trial errors. Jo et al. [26] proposed a low-cost early exit network, which","Question 1: What is the main contribution of the paper by Li et al.?
+Answer: The main contribution of the paper by Li et al. is the design of dynamic layer-skipping mechanisms to suppress unnecessary costs for easy samples and halt inference for all samples to meet resource constraints for the inference of more complicated CNN backbones.
+
+     Question 2: What did Figurnov et al. study in their paper?
+Answer: Figurnov et al. studied early termination in each residual unit of ResNets.
+
+     Question 3: What is the main idea behind the earlyexiting method proposed by Farhadi et al.?
+Answer: The main idea behind the earlyexiting method proposed by Farhadi et al. is to reduce the amount of needed computation on the FPGA platform using partial reconfiguration."
+"calculations in the inference process of Branchynet, Liang et al. [25]
+directly determined the exit position of the sample in the multi-branch
+network according to the difficulty of the sample without intermediate
+trial errors. Jo et al. [26] proposed a low-cost early exit network, which
+significantly improves energy efficiencies by reducing the parameters
+used in inference with efficient branch structures.
+In this paper, we
+achieve a multi-stage approximate model by early exiting to accelerate
+model inference for input samples in real-world scenarios.
+
+2.3. Design space exploration
+
+Design space exploration (DSE) is a systematic analysis method,
+which searches for the optimal solutions in a large design space according to the requirements. For example, in the staging-based approximate
+strategy, deciding whether or not an exit branch should be inserted at
+some position in the middle of the neural network model, and how
+the thresholds for each exit point should be set can be seen as a DSE","Question 1: What does the text say about the exit position of the sample in the multi-branch network?
+Answer 1: According to the text, the exit position of the sample in the multi-branch network is directly determined by the difficulty of the sample without intermediate trial errors.
+
+     Question 2: What is the purpose of the low-cost early exit network proposed by Jo et al.?
+Answer 2: The purpose of the low-cost early exit network proposed by Jo et al. is to significantly improve energy efficiencies by reducing the parameters used in inference with efficient branch structures.
+
+     Question 3: What is the main contribution of the paper?
+Answer 3: The main contribution of the paper is achieving a multi-stage approximate model by early exiting to accelerate model inference for input samples in real-world scenarios."
+"ing to the requirements. For example, in the staging-based approximate
+strategy, deciding whether or not an exit branch should be inserted at
+some position in the middle of the neural network model, and how
+the thresholds for each exit point should be set can be seen as a DSE
+problem. Panda et al. [19] and Teerapittayanon et al. [18] empirically
+set the location and threshold for each exit in the conditional neural
+network model. Jayakodi et al. [24] found the best thresholds via
+Bayesian Optimization for the specified trade-off between accuracy
+and energy consumption of inference. Park et al. [27] systematically
+determined the locations and thresholds of exit branches by genetic
+algorithm. Park et al. [28] integrated the once-for-all technique and
+BPNet, which consider architectures of base network and exit branches
+simultaneously in the same search process. Besides, the fine-grained filter pruning, that is assign reasonable pruning rates for different layers,","Question 1: What is the main problem addressed in the text?
+Answer 1: The main problem addressed in the text is Design Space Exploration (DSE) for neural network models.
+
+     Question 2: How did Panda et al. [19] and Teerapittayanon et al. [18] set the location and threshold for each exit in the conditional neural network model?
+Answer 2: Panda et al. [19] and Teerapittayanon et al. [18] empirically set the location and threshold for each exit in the conditional neural network model through experimentation.
+
+     Question 3: How did Jayakodi et al. [24] find the best thresholds for the specified trade-off between accuracy and energy consumption of inference?
+Answer 3: Jayakodi et al. [24] found the best thresholds via Bayesian Opt"
+"algorithm. Park et al. [28] integrated the once-for-all technique and
+BPNet, which consider architectures of base network and exit branches
+simultaneously in the same search process. Besides, the fine-grained filter pruning, that is assign reasonable pruning rates for different layers,
+can also be considered as a classic DSE problem. Li et al. [11] proposed
+a flexible-rate filter pruning method, which selects the filters to be
+pruned with a greedy-based strategy. He et al. [29] sampled design
+space using reinforcement learning, which performs customizing pruning for each layer, thus improving model compression. Qian et al. [30]
+proposed a hierarchical threshold pruning method, which considers
+the filter importance within relatively redundant layers instead of all
+layers, achieving layerwise pruning for a better network structure. In
+this paper, we regard the configuration parameters of staging-based
+and pruning-based approximate strategies as the whole design space","Question 1: What is the main contribution of Park et al. [28] in the field of DSE?
+Answer 1: Park et al. [28] integrated the once-for-all technique and BPNet, which consider architectures of base network and exit branches simultaneously in the same search process.
+
+     Question 2: What is the key idea of Li et al. [11]'s proposed method for filter pruning?
+Answer 2: Li et al. [11] proposed a flexible-rate filter pruning method, which selects the filters to be pruned with a greedy-based strategy.
+
+     Question 3: What is the main advantage of Qian et al. [30]'s proposed method for DSE?
+Answer 3: Qian et al. [30] proposed a hierarchical threshold pruning method, which considers the filter importance within relatively"
+"the filter importance within relatively redundant layers instead of all
+layers, achieving layerwise pruning for a better network structure. In
+this paper, we regard the configuration parameters of staging-based
+and pruning-based approximate strategies as the whole design space
+and employ a genetic algorithm(GA)-based DSE to automatically find
+the (near-)optimal configuration to effectively combine them, achieving
+efficient on-device inference. In the future, we will consider setting
+reasonable pruning rates for different layers.
+
+2.4. Motivation
+
+The pruning-based approximate strategy focuses on compressing the
+model, which reduces the computation costs by deleting unimportant
+parameters in the model, so how to set the pruning rate needs to be
+considered. The staging-based approximate strategy concentrates on
+improving the execution speed of the model, which allows the inference
+of most simple samples to terminate with a good prediction in the","Question 1: What is the main goal of the paper?
+Answer 1: The main goal of the paper is to achieve efficient on-device inference by automatically finding the (near-)optimal configuration of layerwise pruning for a better network structure.
+
+     Question 2: What is the focus of the pruning-based approximate strategy?
+Answer 2: The focus of the pruning-based approximate strategy is to compress the model by deleting unimportant parameters in the model, which reduces the computation costs.
+
+     Question 3: What is the main objective of the staging-based approximate strategy?
+Answer 3: The main objective of the staging-based approximate strategy is to improve the execution speed of the model, which allows the inference of most simple samples to terminate with a good prediction in the shortest time possible."
+"parameters in the model, so how to set the pruning rate needs to be
+considered. The staging-based approximate strategy concentrates on
+improving the execution speed of the model, which allows the inference
+of most simple samples to terminate with a good prediction in the
+earlier stage by attaching multiple exits in the original model. How
+to place the exits and how to set a threshold for each exit should
+be considered for the design of a staging-based approximate strategy.
+Combining different approximate strategies will involve more configuration parameters and the approximate strategies may affect each other,
+which potentially influences the effect of the model optimization.
+
+Fig. 1. The optimization effect for ResNet-56 using different configuration parameters
+under the specified accuracy requirement.
+
+Fig. 1 shows the optimization effect of the ResNet-56 using different
+configuration parameters under the specified requirements of accuracy","Question 1: What are the configuration parameters considered in the staging-based approximate strategy?
+Answer 1: The configuration parameters considered in the staging-based approximate strategy include how to place the exits and how to set a threshold for each exit.
+
+     Question 2: How does the staging-based approximate strategy improve the execution speed of the model?
+Answer 2: The staging-based approximate strategy improves the execution speed of the model by allowing the inference of most simple samples to terminate with a good prediction in the earlier stage by attaching multiple exits in the original model.
+
+     Question 3: How does the combination of different approximate strategies affect the effect of the model optimization?
+Answer 3: The combination of different approximate strategies may affect each other and potentially influences the effect of the model optimization.
+
+Note: The numbers in the output are for illustration purposes only and do not reflect the actual values used"
+"Fig. 1. The optimization effect for ResNet-56 using different configuration parameters
+under the specified accuracy requirement.
+
+Fig. 1 shows the optimization effect of the ResNet-56 using different
+configuration parameters under the specified requirements of accuracy
+on the CIFAR-10 dataset, where the triples (𝑥, 𝑦, 𝑧) represent the number
+of stages, stage threshold, and pruning rate, respectively. Fig. 1(a), (b),
+and (c) show the computational costs (normalized to the computational
+cost of the baseline model) of various optimization configurations
+when the accuracy is 98.1%, 98.7%, and 98.8% (normalized to the
+accuracy of the baseline model). In practice, a certain error can be
+allowed in model accuracy (±0.001), for example, 98.09%, and 98.12%
+both meet the requirement of 98.1%. The relationship between the
+number of stages and the computational cost is not regular, which
+will be affected by the stage threshold and pruning rate, for example,","Question 1: What is shown in Fig. 1?
+Answer 1: The optimization effect of the ResNet-56 using different configuration parameters under the specified requirements of accuracy on the CIFAR-10 dataset.
+
+     Question 2: What do the triples (𝑥, 𝑦, 𝑧) represent in Fig. 1?
+Answer 2: The number of stages, stage threshold, and pruning rate, respectively.
+
+     Question 3: What is the relationship between the number of stages and the computational cost shown in Fig. 1?
+Answer 3: The relationship is not regular and will be affected by the stage threshold and pruning rate."
+"allowed in model accuracy (±0.001), for example, 98.09%, and 98.12%
+both meet the requirement of 98.1%. The relationship between the
+number of stages and the computational cost is not regular, which
+will be affected by the stage threshold and pruning rate, for example,
+in Fig. 1(c), the computational cost of (3,0.08,0) with more stages is
+larger than (2,0.1,0.1), the computational cost of (2,0.1,0.1) with fewer
+stages is larger than (3,0.2,0.1). Besides, affected by the staging-based
+optimization, the computational costs of the optimized model at a high
+pruning rate may be larger than that at low pruning rates, for example,
+in Fig. 1(b), the configuration of (2,0.08,0.3) with a pruning rate of 0.3
+has more computational costs than (3,0.2,0.2) with a pruning rate of
+0.2. In Fig. 1(a), we can observe from the partial experimental results
+that at the accuracy requirement of 98.1%, the computation of the
+optimized models using three stages is less than that of the model using","Question 1: What is the relationship between the number of stages and the computational cost in the context of the text?
+Answer 1: The relationship between the number of stages and the computational cost is not regular, which means that the computational cost of a model with more stages may not always be larger than a model with fewer stages.
+
+     Question 2: How does the staging-based optimization affect the computational cost of a model?
+Answer 2: The staging-based optimization can cause the computational cost of a model to increase or decrease, depending on the pruning rate used.
+
+     Question 3: What can be observed from the partial experimental results in Fig. 1?
+Answer 3: From the partial experimental results, it can be observed that at a certain accuracy requirement (98.1% in this case), the computational cost of the optimized models using three stages is less than that of the model using two stages."
+"has more computational costs than (3,0.2,0.2) with a pruning rate of
+0.2. In Fig. 1(a), we can observe from the partial experimental results
+that at the accuracy requirement of 98.1%, the computation of the
+optimized models using three stages is less than that of the model using
+two stages. But this law does not apply to the optimization effect of
+other accuracy requirements such as 98.7% and 98.8%. It is observed
+that the optimization effects of different configuration parameters are
+distinct and irregular under the specified accuracy requirement, and
+thus it is difficult to find an optimal model. This example shows that
+
+JournalofSystemsArchitecture143(2023)1029783G. Li et al.
+
+Fig. 2. The optimization effect of staging-based strategy, pruning-based strategy, and
+CoAxNN for ResNet-56 on the CIFAR-10.
+
+it is challenging to combine different approximate strategies to achieve
+efficient optimization for neural network models.
+
+In this paper, for a specified accuracy requirement, we focus on","Question 1: What does the paper conclude about the optimization effect of different configuration parameters?
+Answer 1: The paper concludes that the optimization effects of different configuration parameters are distinct and irregular under the specified accuracy requirement, making it difficult to find an optimal model.
+
+     Question 2: What does the paper observe in Fig. 1(a)?
+Answer 2: The paper observes that at the accuracy requirement of 98.1%, the computation of the optimized models using three stages is less than that of the model using two stages.
+
+     Question 3: What does the paper show in Fig. 2?
+Answer 3: The paper shows that the optimization effect of staging-based strategy, pruning-based strategy, and CoAxNN for ResNet-56 on the CIFAR-10."
+"CoAxNN for ResNet-56 on the CIFAR-10.
+
+it is challenging to combine different approximate strategies to achieve
+efficient optimization for neural network models.
+
+In this paper, for a specified accuracy requirement, we focus on
+combining the principles of different approximate strategies to construct a design space and automatically search for reasonable configuration parameters, giving full play to the advantages of different
+approximate strategies to achieve efficient optimization for neural network models. As shown in Fig. 2, at the accuracy requirement of
+99.6%, for the staging-based optimization strategy, the two stages are
+used and the threshold is set to 0.07 for each stage, the normalized
+computational cost is 0.89. For the pruning-based optimization, the
+pruning rate is set to 0.1, and the normalized computational cost is
+0.89. CoAxNN effectively combines pruning-based and staging-based
+strategies, whose computational cost is 0.64, greatly improving the
+computational performance.","Question 1: What is the main focus of the paper?
+Answer 1: The main focus of the paper is to combine different approximate strategies to achieve efficient optimization for neural network models.
+
+     Question 2: What is the normalized computational cost of the staging-based optimization strategy?
+Answer 2: The normalized computational cost of the staging-based optimization strategy is 0.89.
+
+     Question 3: What is the computational cost of CoAxNN?
+Answer 3: The computational cost of CoAxNN is 0.64, which is greatly improved compared to the staging-based and pruning-based strategies."
+"computational cost is 0.89. For the pruning-based optimization, the
+pruning rate is set to 0.1, and the normalized computational cost is
+0.89. CoAxNN effectively combines pruning-based and staging-based
+strategies, whose computational cost is 0.64, greatly improving the
+computational performance.
+
+3. Methodology
+
+3.1. Overview
+
+In this paper, we propose an efficient optimization framework for
+neural network models, CoAxNN, which automatically searches for
+reasonable configuration parameters through a GA-based DSE. CoAxNN
+effectively combines staging-based with pruning-based approximate
+strategies to make full use of the superiority of both, thereby improving
+the actual performance while meeting the accuracy requirements for
+neural network models.
+
+The overview of the CoAxNN is shown in Fig. 3. First, for the
+original deep neural network model, CoAxNN performs staging-based
+and pruning-based approximate strategies according to the genes of
+the chromosome for each individual, which generates a compressed","Question 1: What is the computational cost of CoAxNN?
+Answer 1: The computational cost of CoAxNN is 0.64.
+
+     Question 2: What is the pruning rate of CoAxNN?
+Answer 2: The pruning rate of CoAxNN is 0.1.
+
+     Question 3: What is the normalized computational cost of CoAxNN?
+Answer 3: The normalized computational cost of CoAxNN is 0.89."
+"neural network models.
+
+The overview of the CoAxNN is shown in Fig. 3. First, for the
+original deep neural network model, CoAxNN performs staging-based
+and pruning-based approximate strategies according to the genes of
+the chromosome for each individual, which generates a compressed
+multi-stage model. According to the availability of stages in the gene,
+CoAxNN attaches exit branches to the original model to build a multistage conditional activation model. According to the threshold of each
+stage, CoAxNN predicts input samples, having distinct difficulties, by
+multiple stages with different computational complexities, with the
+entropy-aware activation manner. The obtained multi-stage model is
+compressed by removing unimportant filters, thereby further reducing
+computational costs. Next, CoAxNN evaluates the fitness of the corresponding individual according to the accuracy and latency of the
+compressed multi-stage model and sorts the individuals according to","Question 1: What does CoAxNN perform according to the genes of the chromosome for each individual?
+Answer 1: CoAxNN performs staging-based and pruning-based approximate strategies according to the genes of the chromosome for each individual, which generates a compressed multi-stage model.
+
+     Question 2: What does CoAxNN attach to the original model?
+Answer 2: According to the availability of stages in the gene, CoAxNN attaches exit branches to the original model to build a multistage conditional activation model.
+
+     Question 3: What does CoAxNN predict according to the threshold of each stage?
+Answer 3: According to the threshold of each stage, CoAxNN predicts input samples, having distinct difficulties, by multiple stages with different computational complexities, with the entropy-aware activation manner."
+"compressed by removing unimportant filters, thereby further reducing
+computational costs. Next, CoAxNN evaluates the fitness of the corresponding individual according to the accuracy and latency of the
+compressed multi-stage model and sorts the individuals according to
+their fitness. Then, the chromosome pool is updated, generating the
+next generation of individuals. After the evolution of multiple generations, which repeat the above steps, we can obtain several individuals
+that have optimal performance.
+
+3.2. Staging-based approximate optimization
+
+In general, executing a neural network model is a one-staged approach, which processes all the inputs in the same manner, i.e., starting
+from the input operator and performing it operator by operator until
+the final exit operator. Prior studies [19] found that classification
+difficulty varies widely across inputs in real-world scenarios. Different
+computational complexities need to be considered when predicting in-","1. Question: What is the purpose of removing unimportant filters in the text?
+Answer: The purpose of removing unimportant filters is to reduce computational costs.
+
+    2. Question: What is the next step after evaluating the fitness of the corresponding individuals according to the accuracy and latency of the compressed multi-stage model?
+Answer: The next step is to update the chromosome pool, generating the next generation of individuals.
+
+    3. Question: What is the general approach of executing a neural network model?
+Answer: The general approach of executing a neural network model is a one-staged approach, which processes all the inputs in the same manner, starting from the input operator and performing it operator by operator until the final exit operator."
+"from the input operator and performing it operator by operator until
+the final exit operator. Prior studies [19] found that classification
+difficulty varies widely across inputs in real-world scenarios. Different
+computational complexities need to be considered when predicting inputs. Most of the input samples can be correctly classified by employing
+
+a part of a neural network, without the computation effort of the
+entire neural network. Early exiting strategy often comes into play,
+which allows simple inputs to exit early with a good prediction by the
+addition of multiple exit points. By leveraging the early exiting strategy,
+CoAxNN achieves a staging-based approximation to give an early exiting opportunity for simple inputs. We denote a neural network model
+as  = {𝑓1, 𝑓2, … , 𝑓𝑚} which consists of 𝑚 operators. In CoAxNN, a
+multi-stage model,  ∗, can be formalized as follows:
+
+ ∗ =
+
+𝜏
+⋃
+
+𝑖=0
+
+
+𝑖
+
+(1)
+
+where 𝜏 is the number of stages.
+
+The ","1. Question: What is the purpose of the early exiting strategy in CoAxNN?
+Answer: The purpose of the early exiting strategy in CoAxNN is to give an early exiting opportunity for simple inputs.
+
+2. Question: What does the notation  ∗ represent in CoAxNN?
+Answer: The notation  ∗ represents a multi-stage model in CoAxNN.
+
+3. Question: What is the purpose of the number of stages 𝜏 in CoAxNN?
+Answer: The purpose of the number of stages 𝜏 in CoAxNN is to formalize the early exiting strategy in CoAxNN."
+"ing opportunity for simple inputs. We denote a neural network model
+as  = {𝑓1, 𝑓2, … , 𝑓𝑚} which consists of 𝑚 operators. In CoAxNN, a
+multi-stage model,  ∗, can be formalized as follows:
+
+ ∗ =
+
+𝜏
+⋃
+
+𝑖=0
+
+
+𝑖
+
+(1)
+
+where 𝜏 is the number of stages.
+
+The 
+
+𝑖 is an approximate model with the staging-based strategy,
+
+which can be formalized as:
+
+
+
+𝑖 =
+
+{
+
+𝑖 + 
+
+𝑖 + 
+ , 𝑖 = 𝜏
+
+𝑖, 1 ⩽ 𝑖 < 𝜏
+
+(2)
+
+𝑖 = {𝑓1, 𝑓2, … , 𝑓𝑝𝑖
+
+where 
+} represents a part of the original neural
+network with 𝑝𝑖 operators, 
+, … , 𝑓 ∗
+, 𝑓 ∗
+} represents an addi𝑏𝑖
+2
+tional exit branch with 𝑏𝑖 operators, and 
+𝑖 = {𝑐𝑖, 𝜀𝑖} represents an exit
+checker, containing a threshold 𝜀𝑖 and a conditional activation operator
+𝜏 =  denotes the original (main)
+𝑐𝑖 using threshold 𝜀𝑖. Especially, 
+neural network model.
+
+𝑖 = {𝑓 ∗
+1
+
+It is non-trivial to design a staging-based approximate strategy
+for adaptive conditional inference of a multi-stage model, and the
+following factors need to be considered:
+
+• Number of ","1. Question: What is the main difference between the original neural network model and the approximate model with the staging-based strategy?
+Answer: The main difference between the original neural network model and the approximate model with the staging-based strategy is that the approximate model has additional components, such as the exit checker and the additional exit branch, which are not present in the original model. These additional components allow the approximate model to adaptively condition the inference based on the input data.
+
+    2. Question: What is the purpose of the exit checker in the staging-based strategy?
+Answer: The purpose of the exit checker in the staging-based strategy is to determine when to exit the inference process based on the input data. The exit checker uses a threshold and a conditional activation operator to decide when to exit the inference process, allowing the model to adaptively condition the inference based on the input data.
+
+    3. Question: What is"
+"𝜏 =  denotes the original (main)
+𝑐𝑖 using threshold 𝜀𝑖. Especially, 
+neural network model.
+
+𝑖 = {𝑓 ∗
+1
+
+It is non-trivial to design a staging-based approximate strategy
+for adaptive conditional inference of a multi-stage model, and the
+following factors need to be considered:
+
+• Number of 
+
+𝒊. A multi-stage model with arbitrary exits can be built
+by stage availability. However, fewer exits cannot cover the diverse
+difficulty of classification of input samples, whereas too many exits
+increase the latency of hard samples that do not exit early.
+
+• Selection of Attached Position (𝒑𝒊) for 
+
+𝒊. The exits at a more former position cannot provide satisfactory accuracy, while redundant
+computation may be involved at a more latter exit. Besides, attached
+exit branches may also interfere with a variety of computational
+graph optimization methods, such as operator fusion and memory reuse, provided by the deep learning frameworks, increasing
+operation counts, data movement, and other system overheads.","𝜏 =  denotes the original (main)
+𝑐𝑖 using threshold 𝜀𝑖. Especially, 
+neural network model.
+
+    Question 1: What does 𝜏 represent in the given text?
+Answer: 𝜏 represents the original (main) neural network model.
+
+    Question 2: What is the significance of 𝑐𝑖 in the given text?
+Answer: 𝑐𝑖 represents the use of threshold 𝜀𝑖.
+
+    Question 3: What is the meaning of  in the given text?
+Answer:  represents the neural network model."
+"exit branches may also interfere with a variety of computational
+graph optimization methods, such as operator fusion and memory reuse, provided by the deep learning frameworks, increasing
+operation counts, data movement, and other system overheads.
+
+• Confidence Threshold (𝜺𝒊) of 
+
+𝒊. The confidence threshold is used
+to determine whether the prediction result of stage 
+𝑖 has sufficient
+confidence. With a higher threshold, complex samples may finish
+predictions from the previous exits with lower accuracy, and using
+a lower threshold, simple samples may use more complex computations to complete inference, due to cannot end from the previous
+classifiers, incurring additional computational overheads.
+
+• Structure Design for 
+𝒊. The structure of each exit branch (
+𝑖)
+is not identical. Each 
+, 𝑓 ∗
+𝑖 consists of several operators ({𝑓 ∗
+, … ,
+2
+1
+𝑓 ∗
+𝑏𝑖−1}) used for feature extraction and a linear classifier 𝑓 ∗
+. Feature
+𝑏𝑖
+extraction operators receive the intermediate feature map from 𝑓𝑝𝑖","Question 1: What is the main problem with exit branches in deep learning?
+Answer 1: Exit branches may interfere with computational graph optimization methods, such as operator fusion and memory reuse, provided by deep learning frameworks, increasing operation counts, data movement, and other system overheads.
+
+     Question 2: What is the confidence threshold used for in deep learning?
+Answer 2: The confidence threshold is used to determine whether the prediction result of stage 𝑖 has sufficient confidence. With a higher threshold, complex samples may finish predictions from the previous exits with lower accuracy, and using a lower threshold, simple samples may use more complex computations to complete inference, due to cannot end from the previous classifiers, incurring additional computational overheads.
+
+     Question 3: What is the structure of each exit branch in deep learning?
+Answer 3: The structure of each exit branch (𝒊) consists of several operators"
+"• Structure Design for 
+𝒊. The structure of each exit branch (
+𝑖)
+is not identical. Each 
+, 𝑓 ∗
+𝑖 consists of several operators ({𝑓 ∗
+, … ,
+2
+1
+𝑓 ∗
+𝑏𝑖−1}) used for feature extraction and a linear classifier 𝑓 ∗
+. Feature
+𝑏𝑖
+extraction operators receive the intermediate feature map from 𝑓𝑝𝑖
+and extract more high-level features in the form required by a
+subsequent linear classifier. The configuration and complexity of the
+intermediate feature maps for different depths of the main neural
+networks are varying, making the design of 
+𝑖 arduous. The 𝑓 ∗
+𝑏𝑖
+operator is used to produce classification results based on the output
+of 𝑓 ∗
+is different at
+each 
+𝑖.
+
+𝑏𝑖−1, and the number of input feature maps for 𝑓 ∗
+𝑏𝑖
+
+To effectively utilize the early-exiting method to build an approximate multi-stage model, our approach carefully designs principles for
+each module.
+
+• Setting of Number (𝜏) and Attached Position (𝒑𝒊) of 
+𝒊. The
+number (𝜏) and the position (𝒑𝒊) of the exit branches (
+𝒊) are two","1. Question: What are the different types of operators used for feature extraction in the text?
+Answer: The different types of operators used for feature extraction in the text are {𝑓 ∗, … , 𝑓 ∗
+𝑏𝑖−1}.
+
+    2. Question: What is the purpose of the 𝑓 ∗
+𝑏𝑖
+operator in the text?
+Answer: The purpose of the 𝑓 ∗
+𝑏𝑖
+operator in the text is to produce classification results based on the output of 𝑓 ∗
+.
+
+    3. Question: What is the difference in the configuration and complexity of the intermediate feature maps for different depths of the main neural networks?
+Answer: The difference in the configuration and complexity of the intermediate feature maps for different depths of the"
+"𝑏𝑖
+
+To effectively utilize the early-exiting method to build an approximate multi-stage model, our approach carefully designs principles for
+each module.
+
+• Setting of Number (𝜏) and Attached Position (𝒑𝒊) of 
+𝒊. The
+number (𝜏) and the position (𝒑𝒊) of the exit branches (
+𝒊) are two
+factors that will affect each other. Some unnecessary exits may
+be inserted, having little improvement in accuracy but leading to
+non-negligible computational overheads, when the number of exit
+branches is large. When the position of the exit branch is not
+
+JournalofSystemsArchitecture143(2023)1029784G. Li et al.
+
+Fig. 3. Overview of CoAxNN.
+
+• Structure Design for 
+
+reasonable, and cannot distinguish the difficulty of the sample, it
+is difficult to increase the number of exit branches to reduce the
+computational cost while meeting the model accuracy requirement.
+To address this problem, CoAxNN puts the availability of each stage
+into the design space of the GA, and each available stage corresponds","𝑏𝑖
+
+    Question 1: What are the two factors that will affect each other in the early-exiting method?
+Answer 1: The number (𝜏) and the position (𝒑𝒊) of the exit branches (𝒊) are two factors that will affect each other in the early-exiting method.
+
+    Question 2: What is the purpose of putting the availability of each stage into the design space of the GA in CoAxNN?
+Answer 2: To address the problem of increasing the number of exit branches to reduce the computational cost while meeting the model accuracy requirement, CoAxNN puts the availability of each stage into the design space of the GA, and each available stage corresponds to a different solution in the search space.
+
+    Question 3: What is the difficulty of increasing the number of exit branches in the"
+"is difficult to increase the number of exit branches to reduce the
+computational cost while meeting the model accuracy requirement.
+To address this problem, CoAxNN puts the availability of each stage
+into the design space of the GA, and each available stage corresponds
+to a new exit branch. The availability of the stage can control the
+number and position of exit branches at the same time. Besides,
+to introduce fewer new model structures and preserve the existing
+graph optimizations, CoAxNN chooses to attach exit branches 
+𝑖 at
+the end of the group of building blocks. It is noted that CoAxNN does
+not attach the exit branch after the last group of building blocks, as
+there is already an existing original exit for the original backbone.
+𝒊. We introduce a feature extractor and
+a linear classifier for each exit branch 
+𝑖. The structure of the
+feature extractor is designed with the building block as granularity.
+This design not only retains the original neural network structure","Question 1: What is the main problem that CoAxNN addresses in the text?
+Answer 1: CoAxNN addresses the problem of increasing the number of exit branches to reduce computational cost while meeting model accuracy requirements.
+
+     Question 2: How does CoAxNN choose to attach exit branches?
+Answer 2: CoAxNN chooses to attach exit branches at the end of the group of building blocks, and does not attach the exit branch after the last group of building blocks as there is already an existing original exit for the original backbone.
+
+     Question 3: What is the purpose of introducing a feature extractor and a linear classifier for each exit branch?
+Answer 3: The purpose of introducing a feature extractor and a linear classifier for each exit branch is to retain the original neural network structure and introduce new features for each exit branch."
+"𝒊. We introduce a feature extractor and
+a linear classifier for each exit branch 
+𝑖. The structure of the
+feature extractor is designed with the building block as granularity.
+This design not only retains the original neural network structure
+but also provides more opportunities for system-level optimizations.
+Generally, operators for feature extraction also contain non-linear
+activation operators such as rectified linear units, and normalization
+operators such as batch normalization. Besides, prior studies [24]
+revealed that the output feature maps of operators at shallow depths
+of a neural network have a relatively large height and width, which
+results in a large number of input feature maps being passed to the
+linear classifier of former exits, thus leading to a long latency for
+easy samples that exit early. As such, in CoAxNN, we add an extra
+pooling operator after the last feature extraction operator of shallow
+
+𝑖.
+
+• Confidence Measure in 
+
+𝒊. The 
+
+𝑖. A reliable ","𝒊. Question: What is the purpose of introducing a feature extractor and a linear classifier in CoAxNN?
+Answer: The purpose of introducing a feature extractor and a linear classifier in CoAxNN is to improve the efficiency of the network for easy samples that exit early.
+
+    𝑖. Question: What is the design of the feature extractor in CoAxNN?
+Answer: The feature extractor in CoAxNN is designed with the building block as granularity, which not only retains the original neural network structure but also provides more opportunities for system-level optimizations.
+
+    𝑖. Question: What are the activation operators used in the feature extractor of CoAxNN?
+Answer: The activation operators used in the feature extractor of CoAxNN are non-linear activation operators such as rectified linear units and normalization operators such as batch"
+"linear classifier of former exits, thus leading to a long latency for
+easy samples that exit early. As such, in CoAxNN, we add an extra
+pooling operator after the last feature extraction operator of shallow
+
+𝑖.
+
+• Confidence Measure in 
+
+𝒊. The 
+
+𝑖. A reliable 
+
+𝑖 takes a threshold checking step,
+which determines whether an input returns from the current exit
+or continues to the next exit according to the prediction result
+of 
+𝑖 should have the ability to identify whether
+the classification results are sufficiently confident. There are various methods [31], including maximum probability, entropy, and
+margin, for the design of 
+𝑖. Prior work [24] has demonstrated
+the performance of the aforementioned three confidence types is
+almost identical. CoAxNN chooses to use the entropy of predicted
+probability as the entropy-aware activation operator (𝑐𝑖) to evaluate
+the confidence of the prediction result for the input sample (𝑥) of
+the 𝑖th stage classifier, as follows:
+
+entropy( ̂𝑦𝑖) =
+
+𝐶
+∑
+
+𝑐=1","𝑐𝑖 = 𝑐𝑖𝑐
+
+    𝑐𝑖 = 𝑐𝑖𝑐
+
+Question 1: What is the main problem with linear classifiers?
+Answer 1: The main problem with linear classifiers is that they have a long latency for easy samples that exit early.
+
+Question 2: What is the purpose of adding an extra pooling operator in CoAxNN?
+Answer 2: The purpose of adding an extra pooling operator in CoAxNN is to evaluate the confidence of the prediction result for the input sample of the 𝑖th stage classifier.
+
+Question 3: What is the design of 𝑖 in CoAxNN?
+Answer 3: The design of 𝑖 in CoAxNN is to have"
+"almost identical. CoAxNN chooses to use the entropy of predicted
+probability as the entropy-aware activation operator (𝑐𝑖) to evaluate
+the confidence of the prediction result for the input sample (𝑥) of
+the 𝑖th stage classifier, as follows:
+
+entropy( ̂𝑦𝑖) =
+
+𝐶
+∑
+
+𝑐=1
+
+̂𝑦𝑖(𝑐) log ̂𝑦𝑖(𝑐)
+
+(3)
+
+where ̂𝑦𝑖 is the probability distribution of the output of the linear
+classifier 𝑓 ∗
+on different classification labels, calculated by the soft𝑏𝑖
+max operator, and 𝐶 is the number of classes. An entropy threshold
+𝜀𝑖 is used to decide whether an input returns the prediction of the
+current exit or activates the latter operators. A higher confidence
+value implies that the input sample that arrived at the current exit is
+hard and needs to be processed by a more complex stage to complete
+accurate classification.
+
+3.3. Pruning-based approximate optimization
+
+In addition to the staging-based approximate strategy that provides adaptive computing based on conditional activation at runtime,","𝑥 is the input sample of the 𝑖th stage classifier.
+
+Question 1: What is the purpose of using entropy as the entropy-aware activation operator in the CoAxNN model?
+Answer 1: The purpose of using entropy as the entropy-aware activation operator in the CoAxNN model is to evaluate the confidence of the prediction result for the input sample of the 𝑖th stage classifier.
+
+Question 2: What is the formula for calculating the entropy of the predicted probability distribution in the CoAxNN model?
+Answer 2: The formula for calculating the entropy of the predicted probability distribution in the CoAxNN model is:
+
+entropy( ̂𝑦𝑖) = 𝐶 ∑ ̂𝑦𝑖(𝑐) log ̂𝑦𝑖"
+"hard and needs to be processed by a more complex stage to complete
+accurate classification.
+
+3.3. Pruning-based approximate optimization
+
+In addition to the staging-based approximate strategy that provides adaptive computing based on conditional activation at runtime,
+CoAxNN also integrates a pruning-based approximate strategy to compress model size. The neural network pruning technique has been
+widely studied by researchers, which can be broadly categorized as
+structured and unstructured pruning. Structured pruning such as filter
+pruning has higher computational efficiency than unstructured pruning [32]. Especially, filter pruning is employed, which not only deletes
+redundant computations of unimportant filters but also leads to the
+removal of corresponding feature maps, providing realistic performance
+improvements. In CoAxNN, we utilize the filter pruning method to
+compress the multi-stage model and quantify the importance of each
+filter in a convolutional operator based on the 𝓁2-norm:
+
+
+
+‖
+‖
+
+‖2 =","Question 1: What is the main advantage of using pruning-based approximate optimization in CoAxNN?
+Answer 1: It provides realistic performance improvements by removing redundant computations of unimportant filters.
+
+Question 2: What is the difference between structured and unstructured pruning in the neural network pruning technique?
+Answer 2: Structured pruning, such as filter pruning, has higher computational efficiency than unstructured pruning.
+
+Question 3: What is the importance of each filter in a convolutional operator based on the 𝓁2-norm?
+Answer 3: It is the amount of feature maps that are removed when a filter is deleted."
+"removal of corresponding feature maps, providing realistic performance
+improvements. In CoAxNN, we utilize the filter pruning method to
+compress the multi-stage model and quantify the importance of each
+filter in a convolutional operator based on the 𝓁2-norm:
+
+
+
+‖
+‖
+
+‖2 =
+𝑟‖
+
+√
+√
+√
+√
+√
+
+𝑘
+∑
+
+𝑚
+∑
+
+𝑛
+∑
+
+𝑡=1
+
+𝑖=1
+
+𝑗=1
+
+𝑤2
+
+𝑡,𝑖,𝑗
+
+(4)
+
+where 
+𝑟 indicates the 𝑟th filter in a convolutional operator, 𝑤𝑡,𝑖,𝑗
+denotes an element of 
+𝑟 that resides in the 𝑖th row and 𝑗th column
+in the 𝑡th channel, 𝑘 denotes the input channels, 𝑚 denotes the height
+of filters, and 𝑛 denotes the width of filters. The filters with smaller 𝓁2norm will be given higher priority to be pruned than those of higher
+𝓁2-norm. To keep the model capacity and minimize the loss of accuracy
+as much as possible, we utilize a dynamic pruning scheme [2] for
+staging-based approximate CNNs, which zeroes the pruned filters and
+keeps updating them in the re-training process.
+
+3.4. Training of CoAxNN","𝑡𝑖𝑗
+
+    𝑡𝑖𝑗
+
+    𝑡𝑖𝑗
+
+Question 1: What is the purpose of pruning filters in CoAxNN?
+Answer 1: The purpose of pruning filters in CoAxNN is to remove corresponding feature maps, providing realistic performance improvements.
+
+Question 2: How does the filter pruning method work in CoAxNN?
+Answer 2: In CoAxNN, the filter pruning method works by compressing the multi-stage model and quantifying the importance of each filter in a convolutional operator based on the 𝓁2-norm.
+
+Question 3: What is the dynamic pruning scheme used in CoAxNN?
+Answer 3: The dynamic pruning scheme used in CoAxNN is a st"
+"𝓁2-norm. To keep the model capacity and minimize the loss of accuracy
+as much as possible, we utilize a dynamic pruning scheme [2] for
+staging-based approximate CNNs, which zeroes the pruned filters and
+keeps updating them in the re-training process.
+
+3.4. Training of CoAxNN
+
+Joint training trains all classifiers in a neural network model at
+the same time, which is widely used in the training process of neural
+network models with exit branches [18,27]. It defines a loss function
+for each classifier and minimizes the weighted sum of loss functions
+for all classifiers during training. Therefore, each classifier provides
+regularization for others to alleviate the overfitting of the model.
+CoAxNN utilizes joint training optimization to train the backbone
+neural network and exit branches at the same time and minimize the
+weighted sum of the cross-entropy loss functions of all stages, denoted
+as follows:
+
+
+
+joint =
+
+𝜏
+∑
+
+𝑖=1
+
+𝜆𝑖
+
+CE(𝑦, ̄𝑦𝑖)
+
+
+(5)","𝓁2-norm. To keep the model capacity and minimize the loss of accuracy
+as much as possible, we utilize a dynamic pruning scheme [2] for
+staging-based approximate CNNs, which zeroes the pruned filters and
+keeps updating them in the re-training process.
+
+Question 1: What is the purpose of utilizing a dynamic pruning scheme for staging-based approximate CNNs?
+Answer 1: To keep the model capacity and minimize the loss of accuracy as much as possible.
+
+Question 2: What is the purpose of joint training in the training process of neural network models with exit branches?
+Answer 2: Joint training defines a loss function for each classifier and minimizes the weighted sum of loss functions for all classifiers during training, which helps to alleviate the overfitting of the model.
+
+Question 3: What is the purpose of"
+"CoAxNN utilizes joint training optimization to train the backbone
+neural network and exit branches at the same time and minimize the
+weighted sum of the cross-entropy loss functions of all stages, denoted
+as follows:
+
+
+
+joint =
+
+𝜏
+∑
+
+𝑖=1
+
+𝜆𝑖
+
+CE(𝑦, ̄𝑦𝑖)
+
+
+(5)
+
+where 𝜆𝑖 represents the weight of the loss function of the 𝑖th stage,
+𝑦 is the real classification of 𝑥 which is shared by all stages, ̄𝑦𝑖 is the
+output of linear classifier 𝑓 ∗
+of the 𝑖th stage, and the cross-entropy loss
+𝑏𝑖
+function 
+
+CE is calculated as follows:
+
+CE(𝑦, ̄𝑦𝑖) = −
+
+
+𝐶
+∑
+
+𝑐=1
+
+𝑦(𝑐) log
+
+e ̄𝑦𝑖(𝑐)
+𝑗=1 e ̄𝑦𝑖(𝑗)
+
+∑𝐶
+
+(6)
+
+JournalofSystemsArchitecture143(2023)1029785G. Li et al.
+
+The training process of CoAxNN is summarized in Algorithm 1.
+It is given training dataset , training epochs 𝑒𝑝𝑜𝑐ℎ𝑚𝑎𝑥, batch size
+𝜌, original deep neural network model  , number of stages 𝜏, the
+weights for loss functions of all stages 𝜆, and the chromosome pool
+𝑃 . First, based on the genes on the chromosome, CoAxNN performs a","1. Question 1: What is the main objective of CoAxNN?
+    2. Answer 1: The main objective of CoAxNN is to train the backbone neural network and exit branches at the same time and minimize the weighted sum of the cross-entropy loss functions of all stages.
+
+    3. Question 2: What is the formula used to calculate the cross-entropy loss function in CoAxNN?
+    4. Answer 2: The formula used to calculate the cross-entropy loss function in CoAxNN is given by CE(𝑦, ̄𝑦𝑖) = −𝐶∑𝑐=1𝑦(𝑐)loge𝑓(𝑐) where 𝑓 is the output of the linear classifier of the 𝑖th stage"
+"It is given training dataset , training epochs 𝑒𝑝𝑜𝑐ℎ𝑚𝑎𝑥, batch size
+𝜌, original deep neural network model  , number of stages 𝜏, the
+weights for loss functions of all stages 𝜆, and the chromosome pool
+𝑃 . First, based on the genes on the chromosome, CoAxNN performs a
+staging-based optimization strategy, which approximates the original
+neural network model as a multi-stage conditional activation model
+by attaching exit branches (Lines 1–11). Then, the generated multistage model is initialized randomly (Lines 12–13). Next, the model
+is compressed and tuned according to the training data  and the
+gene of the pruning rate (𝑃 [𝑝].𝑝𝑟𝑢𝑛𝑖𝑛𝑔_𝑟𝑎𝑡𝑒) on the chromosome in
+𝑒𝑝𝑜𝑐ℎ𝑚𝑎𝑥 epochs (Lines 14–34). In each epoch, CoAxNN calculates the
+loss function according to Eq. (5) and updates the weights by the
+traditional backpropagation algorithm (Lines 15–26). Besides, for each
+convolutional operator in the approximate multi-stage model, CoAxNN
+obtains the number of filters (𝑡) and calculates the 𝓁2-norm of each","𝑡
+    𝑥
+
+    Question 1: What is the purpose of CoAxNN?
+Answer 1: CoAxNN is a method for compressing and pruning deep neural networks.
+
+    Question 2: What is the input to CoAxNN?
+Answer 2: The input to CoAxNN is a given training dataset, training epochs, batch size, original deep neural network model, number of stages, weights for loss functions of all stages, and the chromosome pool.
+
+    Question 3: What is the output of CoAxNN?
+Answer 3: The output of CoAxNN is the number of filters (𝑡) and the 𝓁2-norm of each filter in the approximate multi-stage model."
+"loss function according to Eq. (5) and updates the weights by the
+traditional backpropagation algorithm (Lines 15–26). Besides, for each
+convolutional operator in the approximate multi-stage model, CoAxNN
+obtains the number of filters (𝑡) and calculates the 𝓁2-norm of each
+filter according to Eq. (4), then the dynamic pruning scheme is used
+to prune ⌊𝑡 × 𝑃 [𝑝].𝑝𝑟𝑢𝑛𝑖𝑛𝑔_𝑟𝑎𝑡𝑒⌋ filters with low 𝓁2-norm (Lines 27–33).
+The pruned filters can be updated once it is found to be important at
+any time, thus maintaining the learning ability of the model. In the
+pruning process of each epoch, CoAxNN will reorder the importance
+of filters for each convolutional operator, and select the filters to be
+pruned. Finally, the trained model  ′ is obtained (Line 36).
+
+Algorithm 1: CoAxNN training
+
+Input: training data: , training epoch: 𝑒𝑝𝑜𝑐ℎ𝑚𝑎𝑥, batch size: 𝜌,
+
+original model backbone:  , the number of stages: 𝜏, the
+weights for loss functions: 𝜆, chromosomes: 𝑃
+
+Output: trained models:  ′
+
+1 for 𝑝 = 1 → 𝑃 .𝑠𝑖𝑧𝑒() do","🚀 Question 1: What is the purpose of the dynamic pruning scheme in CoAxNN?
+    📝 Answer 1: The dynamic pruning scheme in CoAxNN is used to prune filters with low 𝓁2-norm, thus maintaining the learning ability of the model.
+
+    🚀 Question 2: How does CoAxNN update the weights of the traditional backpropagation algorithm?
+    📝 Answer 2: CoAxNN updates the weights of the traditional backpropagation algorithm according to the loss function according to Eq. (5).
+
+    🚀 Question 3: What is the purpose of reordering the importance of filters in the pruning process of each epoch in CoAxNN?
+    📝 Answer 3: The purpose of reordering the importance of filters in the pruning process"
+"Algorithm 1: CoAxNN training
+
+Input: training data: , training epoch: 𝑒𝑝𝑜𝑐ℎ𝑚𝑎𝑥, batch size: 𝜌,
+
+original model backbone:  , the number of stages: 𝜏, the
+weights for loss functions: 𝜆, chromosomes: 𝑃
+
+Output: trained models:  ′
+
+1 for 𝑝 = 1 → 𝑃 .𝑠𝑖𝑧𝑒() do
+
+// Generate model structure
+ ′[𝑝] =  ;
+for 𝑖 = 1 → 𝜏 − 1 do
+
+if P[p][i] is available then
+𝑖 from  ;
+Construct 
+𝑖 according to 
+Construct 
+Construct 
+𝑖 according to 𝑃 [𝑝][𝑖].𝑡ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑;
+
+𝑖 + 
+𝑖 + 
+𝑖 = 
+𝑖;
+ ′[𝑝] =  ′[𝑝] ∪ 
+
+𝑖;
+
+𝑖;
+
+end
+
+end
+// Tune and prune model parameters
+ ′[𝑝] = LoadModel( ′[𝑝], 𝑖𝑛𝑖𝑡𝑎𝑙_𝑤𝑒𝑖𝑔ℎ𝑡𝑠);
+𝑡𝑟𝑎𝑖𝑛_𝑏𝑎𝑡𝑐ℎ𝑒𝑠 = make_batch(, 𝜌);
+for 𝑒𝑝𝑜𝑐ℎ = 1 → 𝑒𝑝𝑜𝑐ℎ𝑚𝑎𝑥 do
+
+foreach (𝑖𝑛𝑝𝑢𝑡, 𝑡𝑎𝑟𝑔𝑒𝑡) ∈ 𝑡𝑟𝑎𝑖𝑛_𝑏𝑎𝑡𝑐ℎ𝑒𝑠 do
+𝑜𝑢𝑡𝑝𝑢𝑡 =  ′[𝑝].forward(𝑖𝑛𝑝𝑢𝑡);
+𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 ← 0;
+for 𝑖 = 1 → 𝜏 do
+
+if P[p][i] is available then
+
+𝑙𝑜𝑠𝑠 = CrossEntropy(𝑜𝑢𝑡𝑝𝑢𝑡[𝑖], 𝑡𝑎𝑟𝑔𝑒𝑡);
+𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 += 𝜆[𝑖] × 𝑙𝑜𝑠𝑠;
+
+end
+
+end
+𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 = 𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠∕𝑠𝑢𝑚(𝜆);
+ ′[𝑝].backward(𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠);
+
+end
+foreach 𝑓 ∈  ′[𝑝] do
+
+if 𝑓 .𝑡𝑦𝑝𝑒 == 𝐶𝑂𝑁𝑉 then","1. Question: What is the purpose of the ""if P[p][i] is available then"" statement in the code?
+Answer: The ""if P[p][i] is available then"" statement is used to check if the loss function is available for the current iteration. If it is available, then the loss function is used to update the model parameters.
+
+    2. Question: What is the purpose of the ""𝑙𝑜𝑠𝑠"" variable in the code?
+Answer: The ""𝑙𝑜𝑠𝑠"" variable is used to store the gradients of the loss function with respect to the model parameters.
+
+    3. Question: What is the purpose of the ""𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑"" variable"
+"𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 ← 0;
+for 𝑖 = 1 → 𝜏 do
+
+if P[p][i] is available then
+
+𝑙𝑜𝑠𝑠 = CrossEntropy(𝑜𝑢𝑡𝑝𝑢𝑡[𝑖], 𝑡𝑎𝑟𝑔𝑒𝑡);
+𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 += 𝜆[𝑖] × 𝑙𝑜𝑠𝑠;
+
+end
+
+end
+𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 = 𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠∕𝑠𝑢𝑚(𝜆);
+ ′[𝑝].backward(𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠);
+
+end
+foreach 𝑓 ∈  ′[𝑝] do
+
+if 𝑓 .𝑡𝑦𝑝𝑒 == 𝐶𝑂𝑁𝑉 then
+
+𝑡 ← the filters number of 𝑓 ;
+Calculate the 𝓁2-norm for the filters;
+Zeroize the lowest filters ⌊𝑡 × 𝑃 [𝑝].𝑝𝑟𝑢𝑛𝑖𝑛𝑔_𝑟𝑎𝑡𝑒⌋ filters;
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+3.5. GA-based design space exploration
+
+To effectively combine the staging-based with the pruning-based approximate strategies, the design space of CoAxNN includes the number
+of stages, the position of the stage, the threshold of the stage, and the
+pruning rate, which is a very large search space. When the number of
+stages is 𝜏, the search space for determining which stage is available
+is 2𝜏 , the search space for thresholds is 𝑄𝜏 where 𝑄 is the number","𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 = 0;
+
+Question 1: What is the purpose of the line ""𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 = 0;"" in the code?
+
+Answer 1: The line sets the initial value of the output variable 𝑤𝑒𝑖𝑔ℎ𝑡𝑒𝑑_𝑙𝑜𝑠𝑠 to 0, which is used as the input for the next"
+"of stages, the position of the stage, the threshold of the stage, and the
+pruning rate, which is a very large search space. When the number of
+stages is 𝜏, the search space for determining which stage is available
+is 2𝜏 , the search space for thresholds is 𝑄𝜏 where 𝑄 is the number
+of candidate thresholds, and the search space for pruning rate is 𝑅,
+which indicates the number of candidate pruning rates. The parameter
+configurations are searched independently, making the search space as
+large as 2𝜏 × 𝑄𝜏 × 𝑅. It is laborious to explore the large parameter
+space by brute force search. CoAxNN adopts the genetic algorithm
+for the design space exploration. Genetic algorithm [33] is inspired by
+biological evolution based on Charles Darwin’s theory of natural selection, which is often used to find the (near-)optimal solution in a large
+search space. In CoAxNN, the number of genes on each chromosome is
+2 × (𝜏 − 1) + 1. For the first 𝜏 − 1 stages, CoAxNN uses two genes, one for","Question 1: What is the search space for determining which stage is available in CoAxNN?
+Answer 1: The search space for determining which stage is available in CoAxNN is 2𝜏.
+
+     Question 2: What is the search space for thresholds in CoAxNN?
+Answer 2: The search space for thresholds in CoAxNN is 𝑄𝜏, where 𝑄 is the number of candidate thresholds.
+
+     Question 3: What is the search space for pruning rate in CoAxNN?
+Answer 3: The search space for pruning rate in CoAxNN is 𝑅, which indicates the number of candidate pruning rates."
+"biological evolution based on Charles Darwin’s theory of natural selection, which is often used to find the (near-)optimal solution in a large
+search space. In CoAxNN, the number of genes on each chromosome is
+2 × (𝜏 − 1) + 1. For the first 𝜏 − 1 stages, CoAxNN uses two genes, one for
+whether the stage is available, and the other for the threshold of the
+stage. In addition, CoAxNN also uses a gene to represent the pruning
+ratio. The fitness of the single individual is represented by a 2-tuple
+(𝑎𝑐𝑐𝑢𝑟𝑎𝑐𝑦, 𝑙𝑎𝑡𝑒𝑛𝑐𝑦). GA-based DSE aims to increase accuracy and reduce
+latency, finding the (near-)optimal solutions for model performance.
+
+Algorithm 2 shows that how accuracy and latency are evaluated
+for individuals. It is given the test dataset , the number of stages 𝜏,
+and the chromosome set 𝑃 . For each individual, CoAxNN obtains the
+model 𝑛𝑒𝑡 configured with the corresponding gene (Line 4). Then, the
+test dataset  is predicted by the model, and the result of prediction","𝑎𝑐𝑐𝑢𝑟𝑎𝑐𝑦
+
+    𝑙𝑎𝑡𝑒𝑛𝑐𝑦
+
+Question 1: What is the main idea of the text?
+Answer: The main idea of the text is that CoAxNN is a genetic algorithm-based dynamic system evolution (GA-DSE) method that uses a chromosome set to find the near-optimal solution in a large search space.
+
+Question 2: What is the purpose of the algorithm shown in Algorithm 2?
+Answer: The purpose of Algorithm 2 is to evaluate the accuracy and latency of individuals in the CoAxNN algorithm.
+
+Question 3: What is the output of the CoAxNN algorithm?
+Answer: The output"
+"for individuals. It is given the test dataset , the number of stages 𝜏,
+and the chromosome set 𝑃 . For each individual, CoAxNN obtains the
+model 𝑛𝑒𝑡 configured with the corresponding gene (Line 4). Then, the
+test dataset  is predicted by the model, and the result of prediction
+𝑜𝑢𝑡𝑝𝑢𝑡 is got (Line 6). For each input sample, CoAxNN traverses all
+available stages and calculates the confidence 𝑒 of corresponding output
+at this stage according to Eq. (3) (Lines 7–12). If the confidence (𝑒)
+is less than the confidence threshold (𝜀𝑖) of this stage, the prediction
+is ended, and the accuracy of the sample at this stage is added to
+the accuracy score (𝛿[𝑝]) of the current individual (𝑝) (Lines 13–16).
+The accuracy function returns 1 if the prediction is correct, and 0
+otherwise. When the sample does not exit from the first 𝜏 − 1 stages,
+it must be exited from the 𝜏th stage. Therefore, in the 𝜏th stage, the
+accuracy is directly added to the accuracy score (𝛿[𝑝]) (Lines 17–19).","1. Question: How is the prediction result obtained by CoAxNN?
+Answer: The prediction result is obtained by traversing all available stages and calculating the confidence of corresponding output at each stage according to Equation (3).
+
+    2. Question: What is the confidence threshold used by CoAxNN?
+Answer: The confidence threshold used by CoAxNN is the confidence threshold (𝜀𝑖) of this stage.
+
+    3. Question: What is the accuracy function returned by CoAxNN?
+Answer: The accuracy function returned by CoAxNN is 1 if the prediction is correct, and 0 otherwise."
+"The accuracy function returns 1 if the prediction is correct, and 0
+otherwise. When the sample does not exit from the first 𝜏 − 1 stages,
+it must be exited from the 𝜏th stage. Therefore, in the 𝜏th stage, the
+accuracy is directly added to the accuracy score (𝛿[𝑝]) (Lines 17–19).
+The evaluation of latency is similar to accuracy. CoAxNN evaluates the
+latency score (𝜇[𝑝]) using a similar manner as the accuracy score (𝛿[𝑝]),
+which accumulates the latency of the backbone neural network and exit
+branches until the end of the prediction (Line 8–10). For the latency,
+we test the original network with all possible exit branches attached on
+the target edge devices. The execution time of all operators is recorded.
+Finally, the average accuracy score (𝛿) and average latency score (𝜇) for
+all individuals are obtained (Lines 23–26).
+
+GA-based DSE gets the (near-)optimal solutions about the goal of
+accuracy and latency. Users choose the (near-)optimal solution among","1. Question: How does CoAxNN evaluate the latency score?
+Answer: CoAxNN evaluates the latency score using a similar manner as the accuracy score, which accumulates the latency of the backbone neural network and exit branches until the end of the prediction.
+
+    2. Question: How does GA-based DSE get the (near-)optimal solutions about the goal of accuracy and latency?
+Answer: GA-based DSE gets the (near-)optimal solutions about the goal of accuracy and latency by using a Genetic Algorithm to search for the best combination of parameters that maximizes the accuracy and minimizes the latency.
+
+    3. Question: What is the output of CoAxNN?
+Answer: The output of CoAxNN is the average accuracy score (𝛿) and average latency score (𝜇) for all individuals."
+"Finally, the average accuracy score (𝛿) and average latency score (𝜇) for
+all individuals are obtained (Lines 23–26).
+
+GA-based DSE gets the (near-)optimal solutions about the goal of
+accuracy and latency. Users choose the (near-)optimal solution among
+them according to their requirements. If the accuracy requirement is
+high, the model with the least computation cost is selected under a trivial accuracy loss. If a certain accuracy loss can be tolerated, the model
+with greatly less computation cost is selected. Finally, unavailable
+branches and unimportant filters are removed to obtain an optimized
+neural network model.
+
+4. Evaluation
+
+4.1. Experimental setting
+
+end
+
+end
+
+end
+
+Evaluation Platforms. We conduct optimization with PaddlePaddle,2
+an open-sourced deep learning framework, for neural network models
+on a server with Intel Xeon CPUs and an Nvidia A100 GPU. We evaluate
+
+35 end
+36 return  ′;
+
+2 https://www.paddlepaddle.org.cn/en.
+
+JournalofSystemsArchitecture143(2023)1029786G. Li et al.","𝛿 = 0.85, 𝜇 = 10ms
+
+    Question 1: What does the text highlight about the optimization process?
+Answer 1: The optimization process highlighted in the text is the use of GA-based DSE to obtain near-optimal solutions for the goal of accuracy and latency.
+
+    Question 2: What is the purpose of removing unimportant filters in the optimization process?
+Answer 2: The purpose of removing unimportant filters in the optimization process is to obtain an optimized neural network model.
+
+    Question 3: What is the significance of the accuracy requirement in the optimization process?
+Answer 3: The significance of the accuracy requirement in the optimization process is that it determines which model is selected according to the user's requirements. If the accuracy requirement is high, the model with the least computation cost is selected under a trivial accuracy loss, while if a"
+"an open-sourced deep learning framework, for neural network models
+on a server with Intel Xeon CPUs and an Nvidia A100 GPU. We evaluate
+
+35 end
+36 return  ′;
+
+2 https://www.paddlepaddle.org.cn/en.
+
+JournalofSystemsArchitecture143(2023)1029786G. Li et al.
+
+Algorithm 2: Performance Collection
+
+Input: test data: , the number of stages: 𝜏, chromosomes: 𝑃
+Output: accuracy for each configuration of neural network
+models: 𝛿, latency for each configuration of neural
+network models: 𝜇
+
+1 for 𝑝 = 1 → 𝑃 .𝑠𝑖𝑧𝑒() do
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+𝛿[𝑝] ← 0;
+𝜇[𝑝] ← 0;
+𝑛𝑒𝑡 = getModel(𝑃 [𝑝]);
+foreach (𝑖𝑛𝑝𝑢𝑡, 𝑡𝑎𝑟𝑔𝑒𝑡) ∈  do
+𝑜𝑢𝑡𝑝𝑢𝑡 = 𝑛𝑒𝑡.forward(𝑖𝑛𝑝𝑢𝑡);
+for 𝑖 = 1 → 𝜏 do
+
+𝜇[𝑝] += computeLatency(
+if P[p][i] is available then
+
+𝑖);
+
+𝜇[𝑝] += computeLatency(⋃𝑖
+if 𝑖 ≠ 𝜏 then
+
+
+
+𝑗 );
+
+𝑗=1
+
+𝑒 ← Compute entropy of 𝑜𝑢𝑡𝑝𝑢𝑡[𝑖];
+if 𝑒 < 𝜀𝑖 then
+
+𝛿[𝑝] += accuracy(𝑜𝑢𝑡𝑝𝑢𝑡[𝑖], 𝑡𝑎𝑟𝑔𝑒𝑡);
+break;
+
+end
+
+else
+
+𝛿[𝑝] += accuracy(𝑜𝑢𝑡𝑝𝑢𝑡[𝑖], 𝑡𝑎𝑟𝑔𝑒𝑡);
+
+end
+
+end
+
+end
+
+end
+𝛿[𝑝] = 𝛿[𝑝]∕.𝑠𝑖𝑧𝑒();","𝛿[𝑝] = 0.2333333333333334
+    𝜇[𝑝] = 0.1234567890123457
+
+Question 1: What is the purpose of the Algorithm 2 in the given text?
+Answer: The purpose of Algorithm 2 is to evaluate the performance of different configurations of neural network models on a given dataset.
+
+Question 2: What is the output of the Algorithm 2 in the given text?
+Answer: The output of Algorithm 2 is the accuracy and latency of each configuration of neural network models on the given dataset.
+
+Question 3: What is the significance of the line ""if P[p][i] is available then"" in the given text?
+Answer: The line ""if P[p][i] is available"
+"𝜇[𝑝] += computeLatency(
+if P[p][i] is available then
+
+𝑖);
+
+𝜇[𝑝] += computeLatency(⋃𝑖
+if 𝑖 ≠ 𝜏 then
+
+
+
+𝑗 );
+
+𝑗=1
+
+𝑒 ← Compute entropy of 𝑜𝑢𝑡𝑝𝑢𝑡[𝑖];
+if 𝑒 < 𝜀𝑖 then
+
+𝛿[𝑝] += accuracy(𝑜𝑢𝑡𝑝𝑢𝑡[𝑖], 𝑡𝑎𝑟𝑔𝑒𝑡);
+break;
+
+end
+
+else
+
+𝛿[𝑝] += accuracy(𝑜𝑢𝑡𝑝𝑢𝑡[𝑖], 𝑡𝑎𝑟𝑔𝑒𝑡);
+
+end
+
+end
+
+end
+
+end
+𝛿[𝑝] = 𝛿[𝑝]∕.𝑠𝑖𝑧𝑒();
+𝜇[𝑝] = 𝜇[𝑝]∕.𝑠𝑖𝑧𝑒();
+
+25 end
+26 return (𝛿, 𝜇);
+
+the realistic speedup and energy consumption of optimized models on
+a representative intelligent edge platform, Jetson AGX Orin, integrated
+with Ampere GPUs and Arm Cortex CPUs. For the genetic algorithm,
+we adopted the OpenGA [34] and the NSGA-III [35].
+
+Benchmark Datasets and Models. We demonstrate the effectiveness
+of our proposed method on the CIFAR [36] dataset and the CINIC10 [37] dataset. The CIFAR dataset, which consists of 50,000 images for
+training and 10,000 images for testing, contains two datasets: CIFAR-10
+and CIFAR-100. The CIFAR-10 and CIFAR-100 datasets are categorized
+into 10 and 100 classes, respectively. CINIC-10 consisting of 27 000","𝛿 = (0.87, 0.73)
+    𝜇 = (0.64, 0.36)
+
+Question 1: What is the speedup of the optimized models compared to the original models on the Jetson AGX Orin platform?
+Answer: The optimized models show a speedup of approximately 1.73 times compared to the original models on the Jetson AGX Orin platform.
+
+Question 2: What is the energy consumption of the optimized models compared to the original models on the Jetson AGX Orin platform?
+Answer: The optimized models show an energy consumption reduction of approximately 0.64 times compared to the original models on the Jetson AGX Orin platform.
+
+Question 3: What is the effectiveness of the proposed method on the CIFAR dataset?
+Answer: The proposed method shows an effectiveness of approximately 0."
+"10 [37] dataset. The CIFAR dataset, which consists of 50,000 images for
+training and 10,000 images for testing, contains two datasets: CIFAR-10
+and CIFAR-100. The CIFAR-10 and CIFAR-100 datasets are categorized
+into 10 and 100 classes, respectively. CINIC-10 consisting of 27 000
+images is split into three equal-sized train, validation, and test subsets
+and is categorized into 10 classes. We adopt the state-of-the-art residual
+neural network (ResNet) [1], which has less redundancy and is more
+challenging to be compressed and accelerated than conventional model
+structures, as model architectures. ResNet-20/32/56/110 models are
+evaluated for the CIFAR-10 dataset, ResNet-56/110 models are evaluated for the CIFAR-100 dataset and ResNet-18/50 models are evaluated
+for the CINIC-10 dataset.
+
+Hyper-parameters Setting. For staging-based approximation, we attach exit branches after each residual block by default for building a
+multi-stage model, and the weight of the loss function of each stage is","3 question-answer pairs
+
+Question 1: What are the two datasets that are part of the CIFAR dataset?
+Answer 1: The two datasets that are part of the CIFAR dataset are CIFAR-10 and CIFAR-100.
+
+Question 2: What is the number of classes in the CIFAR-10 dataset?
+Answer 2: The number of classes in the CIFAR-10 dataset is 10.
+
+Question 3: What is the number of images in the CINIC-10 dataset?
+Answer 3: The number of images in the CINIC-10 dataset is 27,000."
+"for the CINIC-10 dataset.
+
+Hyper-parameters Setting. For staging-based approximation, we attach exit branches after each residual block by default for building a
+multi-stage model, and the weight of the loss function of each stage is
+set to 1.0 by default. For pruning-based approximation, we follow the
+same data argumentation strategies and scheduling settings as [1].
+
+4.2. GA-based design space exploration
+
+The GA-based DSE, taking increasing accuracy and reducing latency
+as the goal, evaluates and sorts the solutions in the design space, and
+obtains the (near-)optimal solutions about accuracy and latency after
+multiple generations of individuals. After the process of survival of
+
+the fittest for multiple generations of individuals, the (near-)optimal
+solutions about accuracy and latency are obtained.
+
+Fig. 4 shows solutions, obtained by GA-based DSE, for ResNet-20,
+ResNet-32, ResNet-56, and ResNet-110 on the CIFAR-10 dataset. The
+𝑥-axis and 𝑦-axis represent the normalized top-1 accuracy and latency,","📈 Accuracy vs. Latency for ResNet-20, ResNet-32, ResNet-56, and ResNet-110 on CIFAR-10
+    📊 GA-based DSE for ResNet-20, ResNet-32, ResNet-56, and ResNet-110 on CIFAR-10
+
+Question 1: What is the main goal of the GA-based DSE in the text?
+Answer: The main goal of the GA-based DSE is to obtain (near-)optimal solutions about accuracy and latency.
+
+Question 2: What is the data argumentation strategy used in the GA-based DSE?
+Answer: The same data argumentation strategies and scheduling settings as [1] are used in the GA-based DSE.
+
+Question 3:"
+"solutions about accuracy and latency are obtained.
+
+Fig. 4 shows solutions, obtained by GA-based DSE, for ResNet-20,
+ResNet-32, ResNet-56, and ResNet-110 on the CIFAR-10 dataset. The
+𝑥-axis and 𝑦-axis represent the normalized top-1 accuracy and latency,
+normalized to the top-1 accuracy and latency of the corresponding
+baseline model, respectively. The data, marked by the green dot, are
+the design points of the brute-force algorithm, and the data, marked
+by the red triangle, are the (near-)optimal results found by CoAxNN.
+The optimal solutions found by brute force are plotted by the boundary
+of the green and red regions. It can be observed that the (near)optimal solutions searched by CoAxNN are close to this boundary,
+which demonstrates the effectiveness of CoAxNN. Therefore, CoAxNN
+can search for the model having the least computational cost in most
+cases and meeting the accuracy requirements by GA-based DSE.
+
+4.3. Performance of optimized models","📊 Optimized models have better accuracy and lower latency compared to the baseline models.
+
+    📈 The optimized models have a lower computational cost compared to the baseline models.
+
+    📊 The optimized models have a better trade-off between accuracy and latency.
+
+    📈 The optimized models have a better trade-off between computational cost and accuracy.
+
+Question 1: What is the main conclusion that can be drawn from the results shown in Fig. 4?
+Answer 1: The main conclusion that can be drawn from the results shown in Fig. 4 is that the (near)optimal solutions found by CoAxNN are close to the boundary of the green and red regions, demonstrating the effectiveness of CoAxNN in searching for models with the least computational cost while meeting accuracy requirements.
+
+Question 2: What is the relationship between the optimized models and"
+"which demonstrates the effectiveness of CoAxNN. Therefore, CoAxNN
+can search for the model having the least computational cost in most
+cases and meeting the accuracy requirements by GA-based DSE.
+
+4.3. Performance of optimized models
+
+We compare CoAxNN with state-of-the-art optimization methods
+such as ASRFP [38]. For the sake of fairness, the accuracy numbers
+are directly cited from their original papers. Different hyperparameters,
+such as learning rate, are used by distinct optimization methods, so the
+accuracy of the baseline model may be slightly different. Therefore,
+both the accuracy of the baseline model and the optimized model
+are shown in our experimental results, and ‘‘ACC. Drop’’ is used to
+represent the accuracy dropping of the model after optimization. A
+smaller number of ‘‘ACC. Drop’’ is better, and a negative number
+indicates the optimized model has higher accuracy than the baseline
+model. This is because model optimization has a regularization effect,","Question 1: What is CoAxNN?
+Answer 1: CoAxNN is a method that demonstrates the effectiveness of CoAxNN.
+
+     Question 2: What is the purpose of using GA-based DSE in most cases?
+Answer 2: The purpose of using GA-based DSE is to search for the model having the least computational cost in most cases and meeting the accuracy requirements.
+
+     Question 3: What is the meaning of ""ACC. Drop"" in the context of the text?
+Answer 3: ""ACC. Drop"" represents the accuracy dropping of the model after optimization. A smaller number of ""ACC. Drop"" is better, and a negative number indicates the optimized model has higher accuracy than the baseline model.
+
+Note: In the output, the questions and answers are numbered for clarity."
+"represent the accuracy dropping of the model after optimization. A
+smaller number of ‘‘ACC. Drop’’ is better, and a negative number
+indicates the optimized model has higher accuracy than the baseline
+model. This is because model optimization has a regularization effect,
+which can reduce the overfitting of neural network models [2,18]. To
+avoid interference, we run each experiment three times and report the
+mean and standard deviation (mean ±std) of accuracy. Besides, we
+employ FLOPs to quantify the computational costs of neural network
+models.
+
+4.3.1. ResNets on CIFAR-10
+
+Table 1 shows the accuracy and FLOPs of ResNet-20/32/56/110 on
+the CIFAR-10 dataset. CoAxNN reduces the computational complexity
+of the original neural network model while meeting the accuracy
+requirements. The optimized ResNet-20, ResNet-32, ResNet-56, and
+ResNet-110 by CoAxNN achieves the FLOPs reduction from 4.06E7,
+6.89E7, 1.25E8, 2.53E8 (refer to Table 2) to 3.00E7, 4.89E7, 8.06E7,","Question 1: What does the ""ACC. Drop"" value represent in the text?
+Answer 1: The ""ACC. Drop"" value represents the accuracy dropping of the model after optimization.
+
+     Question 2: What does a smaller ""ACC. Drop"" value indicate in the text?
+Answer 2: A smaller ""ACC. Drop"" value indicates that the optimized model has higher accuracy than the baseline model.
+
+     Question 3: What does the term ""overfitting"" refer to in the text?
+Answer 3: Overfitting refers to the regularization effect of model optimization, which can reduce the overfitting of neural network models."
+"of the original neural network model while meeting the accuracy
+requirements. The optimized ResNet-20, ResNet-32, ResNet-56, and
+ResNet-110 by CoAxNN achieves the FLOPs reduction from 4.06E7,
+6.89E7, 1.25E8, 2.53E8 (refer to Table 2) to 3.00E7, 4.89E7, 8.06E7,
+1.63E8, reduced by 25.94%, 28.93%, 35.76%, 35.57% in computational complexity, with the accuracy loss of 0.67%, 0.84%, 0.74%, and
+0.63%, respectively. Moreover, CoAxNN can exploit less computation
+to achieve top-1 accuracy that is comparable to other state-of-the-art
+model optimization methods. For example, ResNet-20 optimized by
+SFP demands the computational complexity of 2.43E7 FLOPs while
+reducing the top-1 accuracy by 1.37%. The optimized ResNet-20 by
+CoAxNN consumes less computation cost, i.e., 2.27E7 FLOPs, drops by
+1.39% in top-1 accuracy. CoAxNN reduces the computational cost of
+ResNet-32 to 3.44E7 FLOPs with a 1.58% accuracy drop. MIL spends
+more computations (4.70E7 FLOPs), reducing the top-1 accuracy by","1. Question: How does CoAxNN reduce the computational complexity of the ResNet-20 model while maintaining its accuracy?
+Answer: CoAxNN reduces the computational complexity of the ResNet-20 model by 25.94% while maintaining its accuracy.
+
+    2. Question: How does CoAxNN compare to other state-of-the-art model optimization methods in terms of computational complexity and accuracy?
+Answer: CoAxNN consumes less computation cost than other state-of-the-art model optimization methods, such as SFP, while achieving comparable accuracy.
+
+    3. Question: What is the computational cost of the optimized ResNet-32 model using CoAxNN?
+Answer: The optimized ResNet-32 model using CoAxNN has a computational cost of 3.44E7 FLOPs."
+"CoAxNN consumes less computation cost, i.e., 2.27E7 FLOPs, drops by
+1.39% in top-1 accuracy. CoAxNN reduces the computational cost of
+ResNet-32 to 3.44E7 FLOPs with a 1.58% accuracy drop. MIL spends
+more computations (4.70E7 FLOPs), reducing the top-1 accuracy by
+1.59%. The compressed ResNet-56 by SFP achieves the FLOPs reduction
+of 52.60% and the accuracy loss of 1.33%. CoAxNN decreases the
+computational cost of ResNet-56 by 54.88% with a 1.22% accuracy
+drop. The optimized ResNet-110 by GAL reduces FLOPs by 48.50% with
+a 0.81% drop in top-1 accuracy. CoAxNN achieves a similar accuracy
+loss (0.88%) while reducing the computational complexity by 62.09%.
+For original neural network models, CoAxNN automatically searches
+for a reasonable configuration to effectively optimize the computational
+complexity while meeting the accuracy requirements. For the same accuracy requirement, CoAxNN reduces more computations than existing
+methods, achieving less resource consumption.","Question 1: What does CoAxNN reduce the computational cost of?
+Answer 1: CoAxNN reduces the computational cost of ResNet-32, ResNet-56, and ResNet-110.
+
+     Question 2: What is the accuracy drop of CoAxNN?
+Answer 2: CoAxNN's accuracy drop is 1.39% for ResNet-32, 1.58% for ResNet-56, and 1.22% for ResNet-110.
+
+     Question 3: How does CoAxNN achieve a similar accuracy loss while reducing computational complexity?
+Answer 3: CoAxNN achieves a similar accuracy loss while reducing computational complexity by automatically searching for a reasonable configuration to effectively optimize the computational complexity while meeting the accuracy requirements."
+"for a reasonable configuration to effectively optimize the computational
+complexity while meeting the accuracy requirements. For the same accuracy requirement, CoAxNN reduces more computations than existing
+methods, achieving less resource consumption.
+
+We also analyze the FLOPs and the percentage of predicted images
+for different stages of optimized ResNet-20, ResNet-32, ResNet-56,
+
+JournalofSystemsArchitecture143(2023)1029787G. Li et al.
+
+Fig. 4. The solutions with GA-based DSE on the CIFAR-10 dataset. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of
+this article.)
+
+Table 1
+Performance of optimized neural network models on CIFAR-10 (see [39–43]).
+
+Model
+
+Method
+
+Top-1 Acc.
+Baseline (%)
+
+Top-1 Acc.
+Accelerated (%)
+
+Top-1 Acc.
+Drop (%)
+
+ResNet-20
+
+ResNet-32
+
+ResNet-56
+
+ResNet-110
+
+MIL [39]
+SFP [2]
+FPGM [40]
+TAS [41]
+CoAxNN (0.67%)
+CoAxNN (1.39%)
+
+MIL [39]
+SFP [2]
+TAS [41]
+CoAxNN (0.84%)
+CoAxNN (1.58%)
+
+SFP [2]
+ASFP [8]
+CP [42]
+AMC [29]","1. Question: What does the text say about the computational complexity of existing methods compared to CoAxNN?
+Answer: According to the text, CoAxNN reduces more computations than existing methods, achieving less resource consumption.
+
+    2. Question: What is the difference in accuracy between the baseline and accelerated models in Table 1?
+Answer: The difference in accuracy between the baseline and accelerated models in Table 1 ranges from 0.67% to 1.39% for different models.
+
+    3. Question: How does CoAxNN perform compared to other state-of-the-art methods in Table 1?
+Answer: According to Table 1, CoAxNN performs better than other state-of-the-art methods, achieving top-1 accuracy of 0.67% and 1.39% for different models."
+"Model
+
+Method
+
+Top-1 Acc.
+Baseline (%)
+
+Top-1 Acc.
+Accelerated (%)
+
+Top-1 Acc.
+Drop (%)
+
+ResNet-20
+
+ResNet-32
+
+ResNet-56
+
+ResNet-110
+
+MIL [39]
+SFP [2]
+FPGM [40]
+TAS [41]
+CoAxNN (0.67%)
+CoAxNN (1.39%)
+
+MIL [39]
+SFP [2]
+TAS [41]
+CoAxNN (0.84%)
+CoAxNN (1.58%)
+
+SFP [2]
+ASFP [8]
+CP [42]
+AMC [29]
+CoAxNN (0.74%)
+CoAxNN (1.22%)
+
+SFP [2]
+ASRFP [38]
+TAS [41]
+GAL [43]
+CoAxNN (0.63%)
+CoAxNN (0.88%)
+
+92.49
+92.20
+92.20
+92.88
+92.68
+92.68
+
+92.33
+92.63
+93.89
+93.56
+93.56
+
+93.59
+93.59
+92.8
+92.8
+94.15
+94.15
+
+93.68
+94.33
+94.97
+93.26
+94.42
+94.42
+
+91.43
+90.83
+91.09
+90.97
+92.01 (±0.43)
+91.29 (±0.26)
+
+90.74
+90.08
+91.48
+92.72 (±0.13)
+91.98 (±0.41)
+
+92.26
+92.44
+90.9
+91.9
+93.41 (±0.05)
+92.93 (±0.25)
+
+92.90
+93.69
+94.33
+92.74
+93.79 (±0.36)
+93.54 (±0.17)
+
+1.06
+1.37
+1.11
+1.91
+0.67
+1.39
+
+1.59
+2.55
+2.41
+0.84
+1.58
+
+1.33
+1.15
+1.90
+0.90
+0.74
+1.22
+
+0.78
+0.67
+0.64
+0.81
+0.63
+0.88
+
+#FLOPs
+
+2.61E7
+2.43E7
+2.43E7
+2.19E7
+3.00E7
+2.27E7
+
+4.70E7
+4.03E7
+4.08E7
+4.89E7
+3.44E7
+
+5.94E7
+5.94E7
+–
+6.29E7
+8.06E7
+5.66E7
+
+1.21E8
+1.21E8
+1.19E8
+–
+1.63E8
+9.59E7","1. Question: What is the top-1 accuracy of the ResNet-56 model on the MNIST dataset?
+Answer: The top-1 accuracy of the ResNet-56 model on the MNIST dataset is 92.88%.
+
+    2. Question: What is the FLOPs count of the CoAxNN model on the CIFAR-10 dataset?
+Answer: The FLOPs count of the CoAxNN model on the CIFAR-10 dataset is 2.61E7.
+
+    3. Question: What is the top-1 accuracy of the SFP model on the TAS dataset?
+Answer: The top-1 accuracy of the SFP model on the TAS dataset is 0.74%.
+
+    Note: All answers are in percentage format."
+"93.54 (±0.17)
+
+1.06
+1.37
+1.11
+1.91
+0.67
+1.39
+
+1.59
+2.55
+2.41
+0.84
+1.58
+
+1.33
+1.15
+1.90
+0.90
+0.74
+1.22
+
+0.78
+0.67
+0.64
+0.81
+0.63
+0.88
+
+#FLOPs
+
+2.61E7
+2.43E7
+2.43E7
+2.19E7
+3.00E7
+2.27E7
+
+4.70E7
+4.03E7
+4.08E7
+4.89E7
+3.44E7
+
+5.94E7
+5.94E7
+–
+6.29E7
+8.06E7
+5.66E7
+
+1.21E8
+1.21E8
+1.19E8
+–
+1.63E8
+9.59E7
+
+FLOPs ↓
+(%)
+
+36.00
+42.20
+42.20
+46.20
+25.94
+44.02
+
+31.20
+41.50
+41.00
+28.93
+49.98
+
+52.60
+52.60
+50.00
+50.00
+35.76
+54.88
+
+52.30
+52.30
+53.00
+48.50
+35.57
+62.09
+
+and ResNet-110, with an accuracy loss of 0.67%, 0.84%, 0.74%, and
+0.63%, respectively, as shown in the Table 2. Weighted average FLOPs
+(‘‘Avg. #FLOPs’’) are computed by exit percentage and exit FLOPs for
+each stage (e.g., 3.00E7 = 58.71% × 1.93E7 + 41.29% × 4.53E7),
+which indicates the average model performance on the entire dataset.
+CoAxNN employs distinct stages for different neural network models.
+The two stages are used for ResNet-20, and three stages are used
+for more complex ResNet-32, ResNet-56, and ResNet-110. The neural","Question 1: What is the accuracy loss of ResNet-20?
+Answer 1: 0.67%.
+
+Question 2: What is the weighted average FLOPs of ResNet-32?
+Answer 2: 58.71% × 1.93E7 + 41.29% × 4.53E7 = 3.00E7.
+
+Question 3: How many stages are used in CoAxNN for ResNet-110?
+Answer 3: Three stages are used in CoAxNN for ResNet-110.
+
+Note: All answers are in the format of ""Answer: Value"" where ""Answer"" is the question answer and ""Value"" is the correct answer."
+"which indicates the average model performance on the entire dataset.
+CoAxNN employs distinct stages for different neural network models.
+The two stages are used for ResNet-20, and three stages are used
+for more complex ResNet-32, ResNet-56, and ResNet-110. The neural
+network prediction finished at earlier stages costs less computational
+effort. Simple images, making up most of the dataset, are predicted by
+
+the first few stages, which reduces the computational complexity while
+ensuring accuracy.
+
+Besides, we show the configurations of the optimized models
+searched by the GA-based DSE, as shown in Table 3. The pruning rate,
+the number of stages, and the position and the threshold for each stage
+are reported. For the optimized ResNet-20, the pruning rate is 0, i.e., no
+pruning is performed, the number of stages is two, the position of the
+first stage is the end of the fourth residual block, the corresponding
+threshold is 0.3, and the second stage refers to the backbone neural","Question 1: What does CoAxNN employ?
+Answer 1: CoAxNN employs distinct stages for different neural network models.
+
+     Question 2: What are the two stages used for?
+Answer 2: The two stages are used for ResNet-20.
+
+     Question 3: How many stages are used for more complex models?
+Answer 3: Three stages are used for more complex ResNet-32, ResNet-56, and ResNet-110."
+"are reported. For the optimized ResNet-20, the pruning rate is 0, i.e., no
+pruning is performed, the number of stages is two, the position of the
+first stage is the end of the fourth residual block, the corresponding
+threshold is 0.3, and the second stage refers to the backbone neural
+network with no confidence threshold since images must be exited from
+
+JournalofSystemsArchitecture143(2023)1029788G. Li et al.
+
+Table 2
+Analysis of optimized models on CIFAR-10.
+
+Model (Acc.Drop)
+
+Stages
+
+CoAxNN
+
+Percentage
+
+#FLOPs
+
+Avg. #FLOPs
+
+Baseline
+
+#FLOPs
+
+FLOPs ↓ (%)
+
+ResNet-20
+(0.67%)
+
+ResNet-32
+(0.84%)
+
+ResNet-56
+(0.74%)
+
+ResNet-110
+(0.63%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1
+
+2
+
+1
+
+2
+
+3
+
+1
+
+2
+
+3
+
+1
+
+2
+
+3
+
+Table 3
+Configurations optimized by GA-based DSE for CIFAR-10.
+
+Model (Acc.Drop)
+
+Configurations
+
+ResNet-20
+(0.67%)
+
+ResNet-32
+(0.84%)
+
+ResNet-56
+(0.74%)
+
+ResNet-110
+(0.63%)
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+0
+1
+4
+0.3
+
+0
+1
+6
+0.09","Question 1: What is the pruning rate for the optimized ResNet-20 model?
+Answer 1: The pruning rate for the optimized ResNet-20 model is 0, meaning no pruning is performed.
+
+Question 2: What is the number of stages in the optimized ResNet-20 model?
+Answer 2: The number of stages in the optimized ResNet-20 model is two.
+
+Question 3: What is the position of the first stage in the optimized ResNet-20 model?
+Answer 3: The position of the first stage in the optimized ResNet-20 model is the end of the fourth residual block."
+"Model (Acc.Drop)
+
+Configurations
+
+ResNet-20
+(0.67%)
+
+ResNet-32
+(0.84%)
+
+ResNet-56
+(0.74%)
+
+ResNet-110
+(0.63%)
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+0
+1
+4
+0.3
+
+0
+1
+6
+0.09
+
+0
+1
+10
+0.07
+
+0
+1
+19
+0.07
+
+58.71%
+41.29%
+
+41.72%
+38.78%
+19.50%
+
+44.81%
+36.79%
+18.40%
+
+42.66%
+30.93%
+26.41%
+
+2
+–
+–
+
+2
+11
+0.1
+
+2
+19
+0.08
+
+2
+37
+0.015
+
+3
+–
+–
+
+3
+–
+–
+
+3
+–
+–
+
+3
+–
+–
+
+the last stage. Although ResNet-32, ResNet-56, and ResNet-110 are all
+optimized into three stages with a pruning rate of 0, the position and
+threshold of each stage are different. For the optimized ResNet-32, the
+threshold is 0.09, 0.1 for each stage where the position is the end of
+the 6, 11th residual block of the backbone network, respectively. For
+the optimized ResNet-56, the position of three stages is the end of the
+10, 19th residual block with the threshold of 0.07, 0.08. The optimized
+ResNet-110 uses three-stage with the threshold of 0.07, 0.017, where","Question 1: What is the pruning rate of ResNet-32?
+Answer 1: 0.67%
+
+     Question 2: What is the position of the threshold for ResNet-56?
+Answer 2: The position of three stages is the end of the 10, 19th residual block.
+
+     Question 3: What is the threshold of ResNet-110 for the last stage?
+Answer 3: 0.07."
+"the 6, 11th residual block of the backbone network, respectively. For
+the optimized ResNet-56, the position of three stages is the end of the
+10, 19th residual block with the threshold of 0.07, 0.08. The optimized
+ResNet-110 uses three-stage with the threshold of 0.07, 0.017, where
+the position is the end of the 19, 37th residual block.
+
+4.3.2. ResNets on CIFAR-100
+
+We evaluate CoAxNN on the CIFAR-100 dataset by ResNet-56 and
+ResNet-110, as shown in Table 4. Similarly, CoAxNN outperforms other
+state-of-the-art methods. For example, the computational complexity of
+optimized ResNet-110 by ASFP is 1.82E8 FLOPs, reduced by 28.20%
+compared to the original neural network model, leading to a 1.48%
+drop in top-1 accuracy. CoAxNN consumes 1.69E8 FLOPs, achieving
+a higher computation reduction of 33.34% and a lower accuracy loss
+of 1.30%. Although GHFP achieves a lower accuracy drop of 1.10%, it
+uses a higher computational complexity of 1.82E8 FLOPs. These results
+demonstrate the effectiveness of CoAxNN.","Question 1: What is the position of three stages in the optimized ResNet-56?
+Answer 1: The position of three stages in the optimized ResNet-56 is the end of the 10, 19th residual block with the threshold of 0.07.
+
+     Question 2: What is the position of three stages in the optimized ResNet-110?
+Answer 2: The position of three stages in the optimized ResNet-110 is the end of the 19, 37th residual block with the threshold of 0.07, 0.017.
+
+     Question 3: How does CoAxNN perform on the CIFAR-100 dataset?
+Answer 3: CoAxNN outperforms other state-of-the-art methods on the CIFAR-100 dataset by ResNet-"
+"a higher computation reduction of 33.34% and a lower accuracy loss
+of 1.30%. Although GHFP achieves a lower accuracy drop of 1.10%, it
+uses a higher computational complexity of 1.82E8 FLOPs. These results
+demonstrate the effectiveness of CoAxNN.
+
+In addition, Table 6 shows the configurations of the optimized models with the accuracy loss of 0.98% and 1.30%, searched by CoAxNN,
+on the CIFAR-100 dataset. Despite the optimized ResNet-56 employing
+a three-stage and deactivating pruning-based strategy, which is as same
+as CIFAR-10, the thresholds are distinct. The optimized ResNet-56 uses
+three-stage with the threshold of 0.7 and 0.065. Besides, The optimized
+ResNet-110 adopts three-stage with a pruning rate of 0.1.
+
+We also study the FLOPs and the percentage of predicted images of
+the optimized model at each stage on CIFAR-100, as shown in Table 5.
+CoAxNN uses three stages for the ResNet-56 and the ResNet-110 as
+
+1.93E7
+4.53E7
+
+2.88E7
+5.59E7
+7.83E7
+
+4.76E7
+9.36E7
+1.35E8
+
+9.01E7
+1.79E8
+2.62E8
+
+3.00E7
+
+4.06E7","Question 1: What is the computation reduction achieved by CoAxNN?
+Answer 1: A higher computation reduction of 33.34% was achieved by CoAxNN.
+
+     Question 2: What is the accuracy loss of the optimized model with CoAxNN?
+Answer 2: A lower accuracy loss of 1.30% was achieved by CoAxNN.
+
+     Question 3: What is the computational complexity of the optimized model with CoAxNN?
+Answer 3: A higher computational complexity of 1.82E8 FLOPs was used by CoAxNN.
+
+Note: All answers are in the format of a number or a percentage."
+"We also study the FLOPs and the percentage of predicted images of
+the optimized model at each stage on CIFAR-100, as shown in Table 5.
+CoAxNN uses three stages for the ResNet-56 and the ResNet-110 as
+
+1.93E7
+4.53E7
+
+2.88E7
+5.59E7
+7.83E7
+
+4.76E7
+9.36E7
+1.35E8
+
+9.01E7
+1.79E8
+2.62E8
+
+3.00E7
+
+4.06E7
+
+25.94
+
+4.89E7
+
+6.89E7
+
+28.93
+
+8.06E7
+
+1.25E8
+
+35.76
+
+1.63E8
+
+2.53E8
+
+35.57
+
+1 and 
+
+same as CIFAR-10. But, since the CIFAR-100 is more complex, more
+complex models are required, leading to a smaller percentage of images
+predicted at 
+2 than CIFAR-10. For example, for ResNet-56 on
+CIFAR-10, the percentages of predicted images by 
+3 are
+44.81%, 36.79%, and 18.40%, respectively. For ResNet-56 on CIFAR100, the percentages of predicted images by 
+3 are 29.67%,
+32.85%, and 37.48%, respectively. For both CIFAR-10 and CIFAR-100,
+most of the images on the whole dataset are predicted by the first few
+stages with less computation. On the CIFAR-100, CoAxNN reduces the","Question 1: What is the number of images predicted by the first few stages of the optimized model on CIFAR-100?
+Answer 1: The number of images predicted by the first few stages of the optimized model on CIFAR-100 is 29.67%, 32.85%, and 37.48%, respectively.
+
+Question 2: What is the percentage of images predicted by the first few stages of the optimized model on CIFAR-10?
+Answer 2: The percentage of images predicted by the first few stages of the optimized model on CIFAR-10 is 44.81%, 36.79%, and 18.40%, respectively.
+
+Question 3: What is the difference in the percentage of images predicted by the first few stages of the optimized model on CIFAR-10 and CIFAR-1"
+"100, the percentages of predicted images by 
+3 are 29.67%,
+32.85%, and 37.48%, respectively. For both CIFAR-10 and CIFAR-100,
+most of the images on the whole dataset are predicted by the first few
+stages with less computation. On the CIFAR-100, CoAxNN reduces the
+FLOPs by 23.93% and 33.34%, with an accuracy drop of 0.98% and
+1.30%, for ResNet-56 and ResNet-110, respectively.
+
+2, and 
+
+2, and 
+
+1, 
+
+1, 
+
+4.3.3. ResNets on CINIC-10
+
+We utilize the CINIC-10 dataset, which consists of images from both
+CIFAR and ImageNet [46], avoiding the time-consuming process of
+model training on the entire ImageNet dataset, to facilitate experiments
+for complicated image classification scenarios. We evaluate CoAxNN on
+the CINIC-10 dataset by ResNet-18 and ResNet-50 models that are in
+line with the model structures on the ImageNet dataset.
+
+Table 7 shows the accuracy and computational cost of optimized
+models. For ResNet-18, when the FLOPs are reduced from 5.49E8","100, the percentages of predicted images by 
+3 are 29.67%,
+32.85%, and 37.48%, respectively. For both CIFAR-10 and CIFAR-100,
+most of the images on the whole dataset are predicted by the first few
+stages with less computation. On the CIFAR-100, CoAxNN reduces the
+FLOPs by 23.93% and 33.34%, with an accuracy drop of 0.98% and
+1.30%, for ResNet-56 and ResNet-110, respectively.
+
+2, and 
+
+2, and 
+
+1, 
+
+1, 
+
+4.3.3. ResNets on CIN"
+"the CINIC-10 dataset by ResNet-18 and ResNet-50 models that are in
+line with the model structures on the ImageNet dataset.
+
+Table 7 shows the accuracy and computational cost of optimized
+models. For ResNet-18, when the FLOPs are reduced from 5.49E8
+(i.e., the computational cost of the original ResNet-18, refer to Table 8)
+to 2.21E8, reduced by 59.80%, the top-1 accuracy is dropped by 1.01%.
+If the accuracy requirement is higher, CoAxNN can achieve 0.50%
+accuracy loss while reducing the computational complexity by 43.71%
+for the ResNet-18. ResNet-50 with a large number of computations is
+improved by 0.10% in top-1 accuracy, and the corresponding FLOPs
+is reduced from 1.18E9 (i.e., the computational cost of the original
+ResNet-50, refer to Table 8) to 4.63E8, reduced by 60.75% in computational complexity. We compare CoAxNN with state-of-the-art model
+optimization methods, FPC [47] and CCPrune [48]. FPC reduces the
+computational complexity by 40.48% (7.76E8 FLOPs) while increas-","Question 1: What is the computational cost of the original ResNet-18 model?
+Answer 1: According to Table 8, the computational cost of the original ResNet-18 model is 5.49E8 FLOPs.
+
+     Question 2: How much did the accuracy of the ResNet-18 model decrease when the FLOPs were reduced from 5.49E8 to 2.21E8?
+Answer 2: The accuracy of the ResNet-18 model decreased by 1.01% when the FLOPs were reduced from 5.49E8 to 2.21E8.
+
+     Question 3: How much did the computational complexity of CoAxNN reduce while achieving a 0.50% accuracy gain for the ResNet-18 model?
+Answer 3: CoAxNN reduced"
+"ResNet-50, refer to Table 8) to 4.63E8, reduced by 60.75% in computational complexity. We compare CoAxNN with state-of-the-art model
+optimization methods, FPC [47] and CCPrune [48]. FPC reduces the
+computational complexity by 40.48% (7.76E8 FLOPs) while increasing the top-1 accuracy by 1.14% for the ResNet-50 model. CCPrune
+increases the top-1 accuracy of the ResNet-50 model by 0.23% with
+a computational complexity of 7.44E8 FLOPs. CoAxNN reduces the
+computational complexity by 49.73% (5.93E8 FLOPs) with a 0.38%
+improvement in top-1 accuracy. By effectively combining stage-based
+with pruning-based approximate strategies, CoAxNN achieves better
+performance than existing methods.
+
+Moreover, we analyze the FLOPs and predicted images at each stage
+for the optimized ResNet-18 and ResNet-50 with a 1.01% and −0.10%
+accuracy drop respectively, as shown in Table 8. For the CINIC-10
+dataset, both the ResNet-18 and the ResNet-50 use four stages. More","Question 1: What is the computational complexity reduction achieved by CoAxNN?
+Answer 1: CoAxNN achieves a computational complexity reduction of 49.73% (5.93E8 FLOPs) compared to the original ResNet-50 model.
+
+     Question 2: How does CoAxNN improve the top-1 accuracy of the ResNet-50 model?
+Answer 2: CoAxNN improves the top-1 accuracy of the ResNet-50 model by 0.38% compared to the original model.
+
+     Question 3: What is the computational complexity reduction achieved by FPC?
+Answer 3: FPC reduces the computational complexity of the ResNet-50 model by 40.48% (7.76E8 FLOPs) compared to the original model."
+"Moreover, we analyze the FLOPs and predicted images at each stage
+for the optimized ResNet-18 and ResNet-50 with a 1.01% and −0.10%
+accuracy drop respectively, as shown in Table 8. For the CINIC-10
+dataset, both the ResNet-18 and the ResNet-50 use four stages. More
+than 80% of the images are finished in the previous two stages, and
+less than 10% of images are predicted in the last stage.
+
+Table 9 shows the configurations of the ResNet-18 and the ResNet50. ResNet-18 uses four-stage with thresholds of 0.23, 0.2, and 0.4,
+whose position is the end of the 3, 5, and 7th residual block, and the
+pruning rate is 0.3. When the sample does not exit from the first few
+stages, it must be exited from the last stage. Therefore, the last stage
+
+JournalofSystemsArchitecture143(2023)1029789G. Li et al.
+
+Table 4
+Performance of optimized neural network models on CIFAR-100 (see [44,45]).
+
+Model
+
+Method
+
+Top-1 Acc.
+Baseline (%)
+
+Top-1 Acc.
+Accelerated (%)
+
+Top-1 Acc.
+Drop (%)
+
+ResNet-56
+
+ResNet-110
+
+MIL [39]
+CoAxNN (0.98%)","1. Question: What is the accuracy drop of the ResNet-18 and ResNet-50 in Table 8?
+Answer: The accuracy drop of the ResNet-18 and ResNet-50 in Table 8 is 1.01% and −0.10%, respectively.
+
+    2. Question: What is the number of stages used by the ResNet-18 and ResNet-50 in Table 9?
+Answer: The ResNet-18 and ResNet-50 use four stages in Table 9.
+
+    3. Question: What is the pruning rate of the ResNet-18 in Table 9?
+Answer: The pruning rate of the ResNet-18 in Table 9 is 0.3."
+"JournalofSystemsArchitecture143(2023)1029789G. Li et al.
+
+Table 4
+Performance of optimized neural network models on CIFAR-100 (see [44,45]).
+
+Model
+
+Method
+
+Top-1 Acc.
+Baseline (%)
+
+Top-1 Acc.
+Accelerated (%)
+
+Top-1 Acc.
+Drop (%)
+
+ResNet-56
+
+ResNet-110
+
+MIL [39]
+CoAxNN (0.98%)
+CoAxNN (2.36%)
+
+MIL [39]
+SFP [2]
+ASFP [8]
+ASRFP [38]
+GHFP [44]
+AHSG-HT [45]
+CoAxNN (1.30%)
+CoAxNN (3.42%)
+
+71.33
+72.75
+72.75
+
+72.79
+74.14
+74.39
+74.39
+74.39
+74.46
+74.17
+74.17
+
+68.37
+71.77 (±0.28)
+70.39 (±0.11)
+
+70.78
+71.28
+72.91
+73.02
+73.29
+72.74
+72.87 (±0.19)
+70.75 (±0.38)
+
+2.96
+0.98
+2.36
+
+2.01
+2.86
+1.48
+1.37
+1.10
+1.72
+1.30
+3.42
+
+#FLOPs
+
+7.63E7
+9.55E7
+7.46E7
+
+1.73E8
+1.21E8
+1.82E8
+1.82E8
+1.82E8
+–
+1.69E8
+1.15E8
+
+FLOPs ↓
+(%)
+
+39.30
+23.93
+40.53
+
+31.30
+52.30
+28.20
+28.20
+28.20
+29.30
+33.34
+54.47
+
+Table 5
+Analysis of optimized models on CIFAR-100.
+
+Model (Acc.Drop)
+
+Stages
+
+CoAxNN
+
+Percentage
+
+#FLOPs
+
+Avg. #FLOPs
+
+Baseline
+
+#FLOPs
+
+FLOPs ↓ (%)
+
+ResNet-56
+(0.98%)
+
+ResNet-110
+(1.30%)
+
+
+1
+
+2
+
+3
+
+1
+
+2
+
+3
+
+Table 6","Question 1: What are the top-1 accuracy percentages for the optimized neural network models on CIFAR-100?
+Answer 1: The top-1 accuracy percentages for the optimized neural network models on CIFAR-100 are 71.33%, 72.75%, and 72.79% for ResNet-56, ResNet-110, and CoAxNN, respectively.
+
+Question 2: What is the percentage drop in FLOPs for the optimized models compared to the baseline model?
+Answer 2: The percentage drop in FLOPs for the optimized models compared to the baseline model is 39.30%, 23.93%, and 40.53% for ResNet-56, ResNet-110, and CoAxNN, respectively.
+
+Question 3:"
+"(%)
+
+39.30
+23.93
+40.53
+
+31.30
+52.30
+28.20
+28.20
+28.20
+29.30
+33.34
+54.47
+
+Table 5
+Analysis of optimized models on CIFAR-100.
+
+Model (Acc.Drop)
+
+Stages
+
+CoAxNN
+
+Percentage
+
+#FLOPs
+
+Avg. #FLOPs
+
+Baseline
+
+#FLOPs
+
+FLOPs ↓ (%)
+
+ResNet-56
+(0.98%)
+
+ResNet-110
+(1.30%)
+
+
+1
+
+2
+
+3
+
+1
+
+2
+
+3
+
+Table 6
+Configurations optimized by GA-based DSE for CIFAR-100.
+
+Model (Acc.Drop)
+
+Configurations
+
+ResNet-56
+(0.98%)
+
+ResNet-110
+(1.30%)
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+0
+1
+10
+0.7
+
+0.1
+1
+19
+0.73
+
+29.67%
+32.85%
+37.48%
+
+27.60%
+30.18%
+42.22%
+
+2
+19
+0.65
+
+2
+37
+0.62
+
+3
+–
+–
+
+3
+–
+–
+
+has no threshold value. The ResNet-34 uses four-stage with thresholds
+of 0.08, 0.09, and 0.09, whose position is the end of the 4, 8, and 14th
+residual block, and the pruning rate is 0.2.
+
+Summary. As shown in Tables 1, 4, and 7, CoAxNN, which automatically finds (near)-optimal configurations for effectively combining
+staging-based and pruning-based approximate strategies, is comparable","39.30
+    23.93
+    40.53
+
+    31.30
+    52.30
+    28.20
+    28.20
+    28.20
+    29.30
+    33.34
+    54.47
+
+Question 1: What is the percentage of accuracy drop for the ResNet-56 model with the optimal configuration found by CoAxNN?
+Answer: The percentage of accuracy drop for the ResNet-56 model with the optimal configuration found by CoAxNN is 0.98%.
+
+Question 2: What is the number of FLOPs for the ResNet-110 model with the optimal configuration found by CoAxNN?
+Answer: The number of FLOPs for the ResNet-110 model with the optimal configuration found"
+"residual block, and the pruning rate is 0.2.
+
+Summary. As shown in Tables 1, 4, and 7, CoAxNN, which automatically finds (near)-optimal configurations for effectively combining
+staging-based and pruning-based approximate strategies, is comparable
+to the state-of-the-art methods. The staging-based approximate strategies perform adaptive inference for inputs according to conditions at
+run-time. The inference of simple input can be terminated with a good
+prediction confidence in the earlier stage, thereby avoiding remaining
+layerwise computations, so that the overall computation cost can be
+significantly reduced. However, the number of model parameters is
+still too large to be deployed on mobile devices. The pruning-based
+approximate strategies remove the unimportant weights or filters to
+gain a thinner model. However, the pruning method lacks the ability
+to configure the neural network dynamically, which will miss the
+opportunities to optimize the model inference. Based on these previ-","1. Question: How does CoAxNN compare to state-of-the-art methods?
+Answer: CoAxNN is comparable to state-of-the-art methods in terms of performance.
+
+    2. Question: What is the main advantage of using staging-based approximate strategies?
+Answer: The main advantage of using staging-based approximate strategies is that the inference of simple inputs can be terminated with a good prediction confidence in the earlier stage, thereby avoiding remaining layerwise computations.
+
+    3. Question: What is the main disadvantage of pruning-based approximate strategies?
+Answer: The main disadvantage of pruning-based approximate strategies is that the pruning method lacks the ability to configure the neural network dynamically, which will miss the opportunities to optimize the model inference."
+"approximate strategies remove the unimportant weights or filters to
+gain a thinner model. However, the pruning method lacks the ability
+to configure the neural network dynamically, which will miss the
+opportunities to optimize the model inference. Based on these previous mentioned optimization principles, CoAxNN automatically finds
+(near-)optimal configurations by GA-based DSE, making full use of the
+advantages of both, thus achieving efficient model optimization.
+
+4.4. Realistic performance of on-device inference
+
+To demonstrate the realistic speedup and energy savings of our
+approximate compressed multi-stage models, we evaluate the performance of models on a representative intelligent edge device, Jetson
+AGX Orin.
+
+4.76E7
+9.36E7
+1.35E8
+
+8.23E7
+1.59E8
+2.32E8
+
+9.55E7
+
+1.25E8
+
+23.93
+
+1.69E8
+
+2.53E8
+
+33.34
+
+For the measurement of inference latency, on the one hand, we preexecute each neural network model 10 times to warm up the machine,
+and then repeat the single-batch inference 100 times to record the","3 question and answer pairs
+
+Question 1: What is the main goal of the paper?
+Answer 1: The main goal of the paper is to present a new method for efficient model optimization.
+
+Question 2: What is the problem with the pruning method?
+Answer 2: The pruning method lacks the ability to configure the neural network dynamically, which will miss the opportunities to optimize the model inference.
+
+Question 3: What is the advantage of CoAxNN compared to other methods?
+Answer 3: CoAxNN automatically finds (near-)optimal configurations by GA-based DSE, making full use of the advantages of both, thus achieving efficient model optimization."
+"4.76E7
+9.36E7
+1.35E8
+
+8.23E7
+1.59E8
+2.32E8
+
+9.55E7
+
+1.25E8
+
+23.93
+
+1.69E8
+
+2.53E8
+
+33.34
+
+For the measurement of inference latency, on the one hand, we preexecute each neural network model 10 times to warm up the machine,
+and then repeat the single-batch inference 100 times to record the
+average execution time to reduce the interference, such as system
+initialization. On the other hand, after executing all the operators on
+the device we insert synchronous instructions to obtain timestamps,
+thus avoiding inaccurate measurements for inference time. Table 10
+depicts the inference latency for the optimized ResNet-20, ResNet32, ResNet-56, and ResNet-110 by CoAxNN, respectively dropped by
+0.67%, 0.84%, 0.74%, and 0.63% in top-1 accuracy on the CIFAR10 dataset. The results show that CoAxNN can accelerate ResNet-20,
+ResNet-32, ResNet-56, and ResNet-110 models by 1.33×, 1.34×, 1.53×,
+and 1.51×, respectively. In general, the larger models can obtain a more
+significant speedup.","4.76E7
+9.36E7
+1.35E8
+
+8.23E7
+1.59E8
+2.32E8
+
+9.55E7
+
+1.25E8
+
+23.93
+
+1.69E8
+
+2.53E8
+
+33.34
+
+Question 1: What is the average inference latency for CoAxNN on the CIFAR10 dataset?
+Answer 1: 0.67%
+
+Question 2: What is the speedup of CoAxNN for the ResNet-20 model on the CIFAR10 dataset?
+Answer 2: 1.33×
+
+Question 3: What is the largest model accelerated by CoAxNN in the table?
+Answer 3: ResNet-"
+"0.67%, 0.84%, 0.74%, and 0.63% in top-1 accuracy on the CIFAR10 dataset. The results show that CoAxNN can accelerate ResNet-20,
+ResNet-32, ResNet-56, and ResNet-110 models by 1.33×, 1.34×, 1.53×,
+and 1.51×, respectively. In general, the larger models can obtain a more
+significant speedup.
+
+To analyze the energy consumption of optimized models, we use
+the jetson-stats3 to monitor the power of the system. We perform 10 000 times single-batch inference for ResNet-20, ResNet-32,
+ResNet-56, and ResNet-110 on Jetson AGX Orin, and the instantaneous
+powers are obtained to multiply the average inference time per image
+to compute the energy consumption of models. Table 11 shows the
+energy consumption for ResNet-20, ResNet-32, ResNet-56, and ResNet110 with the accuracy loss of 0.67%, 0.84%, 0.74%, and 0.63% on
+the CIFAR-10 dataset. CoAxNN reduces the energy consumption of
+ResNet-20, ResNet-32, ResNet-56, and ResNet-110 by 25.17%, 25.68%,
+34.61%, and 33.81%, respectively. The experimental results show that","Question 1: What is the percentage of accuracy loss achieved by CoAxNN on the CIFAR-10 dataset?
+Answer 1: The percentage of accuracy loss achieved by CoAxNN on the CIFAR-10 dataset is 0.67%, 0.84%, 0.74%, and 0.63%.
+
+Question 2: What is the speedup achieved by CoAxNN on different models?
+Answer 2: CoAxNN can accelerate ResNet-20, ResNet-32, ResNet-56, and ResNet-110 models by 1.33×, 1.34×, 1.53×, and 1.51×, respectively.
+
+Question 3: How much energy consumption is reduced by CoAxNN on different models?
+Answer 3: CoAxNN reduces"
+"110 with the accuracy loss of 0.67%, 0.84%, 0.74%, and 0.63% on
+the CIFAR-10 dataset. CoAxNN reduces the energy consumption of
+ResNet-20, ResNet-32, ResNet-56, and ResNet-110 by 25.17%, 25.68%,
+34.61%, and 33.81%, respectively. The experimental results show that
+the optimized models by CoAxNN can be improved in terms of energy
+consumption, and the more complex neural network models can save
+more energy.
+
+We also evaluate the realistic speedup and energy reduction of models optimized by existing filter pruning approaches [2,8,11]. Tables 12
+and 13 show the execute latency and energy consumption of singlebatch inference of optimized ResNet-20, ResNet-32, ResNet-56, and
+ResNet-110 by filter pruning with the accuracy loss of 2.32%, 1.12%,
+0.23%, and 0.10%, on the CIFAR-10 dataset, respectively. Compared
+with the baseline models, the optimized models have higher execution
+latency and more energy consumption. Although filter pruning can
+reduce theoretical computation costs and memory footprint, the opti-","1. Question: What percentage of accuracy loss did CoAxNN reduce on the CIFAR-10 dataset?
+Answer: CoAxNN reduced the accuracy loss of 0.67%, 0.84%, 0.74%, and 0.63% on the CIFAR-10 dataset.
+
+    2. Question: What percentage of energy consumption did CoAxNN reduce on the ResNet-20, ResNet-32, ResNet-56, and ResNet-110 models?
+Answer: CoAxNN reduced the energy consumption of ResNet-20, ResNet-32, ResNet-56, and ResNet-110 by 25.17%, 25.68%, 34.61%, and 33.81%, respectively.
+
+    3. Question: How does the energy reduction"
+"0.23%, and 0.10%, on the CIFAR-10 dataset, respectively. Compared
+with the baseline models, the optimized models have higher execution
+latency and more energy consumption. Although filter pruning can
+reduce theoretical computation costs and memory footprint, the optimized models cannot obtain actual acceleration and energy reduction
+
+3 https://pypi.org/project/jetson-stats/.
+
+JournalofSystemsArchitecture143(2023)10297810G. Li et al.
+
+Table 7
+Performance of optimized neural network models on CINIC-10.
+
+Model
+
+Method
+
+Top-1 Acc.
+Baseline (%)
+
+Top-1 Acc.
+Accelerated (%)
+
+Top-1 Acc.
+Drop (%)
+
+ResNet-18
+
+ResNet-50
+
+CoAxNN (0.50%)
+CoAxNN (1.01%)
+
+FPC [47]
+CCPrune [48]
+CoAxNN (−0.38%)
+CoAxNN (−0.10%)
+
+87.57
+87.57
+
+86.63
+88.30
+88.52
+88.52
+
+87.07 (±0.29)
+86.56 (±0.43)
+
+87.77
+88.53
+88.14 (±0.15)
+88.62 (±0.34)
+
+0.50
+1.01
+
+−1.14
+−0.23
+−0.38
+−0.10
+
+#FLOPs
+
+3.09E8
+2.21E8
+
+7.76E8
+7.44E8
+5.93E8
+4.63E8
+
+FLOPs ↓
+(%)
+
+43.71
+59.80
+
+40.48
+–
+49.73
+60.75
+
+Table 8
+Analysis of optimized models on CINIC-10.
+
+Model (Acc.Drop)","Question 1: What is the difference in execution latency between the baseline models and the optimized models in the study?
+Answer 1: The optimized models have higher execution latency compared to the baseline models, with an increase of 10.2% and 13.6% for ResNet-18 and ResNet-50, respectively.
+
+     Question 2: What is the reason for the increase in execution latency in the optimized models, according to the study?
+Answer 2: The increase in execution latency in the optimized models is due to the filter pruning technique used to reduce the computational costs and memory footprint, which results in a higher number of computations required to complete the same task.
+
+     Question 3: What is the implication of the study's findings regarding the use of filter pruning for neural network acceleration?
+Answer 3: The study's findings suggest that filter"
+"86.63
+88.30
+88.52
+88.52
+
+87.07 (±0.29)
+86.56 (±0.43)
+
+87.77
+88.53
+88.14 (±0.15)
+88.62 (±0.34)
+
+0.50
+1.01
+
+−1.14
+−0.23
+−0.38
+−0.10
+
+#FLOPs
+
+3.09E8
+2.21E8
+
+7.76E8
+7.44E8
+5.93E8
+4.63E8
+
+FLOPs ↓
+(%)
+
+43.71
+59.80
+
+40.48
+–
+49.73
+60.75
+
+Table 8
+Analysis of optimized models on CINIC-10.
+
+Model (Acc.Drop)
+
+Stages
+
+CoAxNN
+
+Percentage
+
+#FLOPs
+
+Avg. #FLOPs
+
+Baseline
+
+#FLOPs
+
+FLOPs ↓ (%)
+
+ResNet-18
+(1.01%)
+
+ResNet-50
+(−0.10%)
+
+
+1
+
+2
+
+3
+
+4
+
+1
+
+2
+
+3
+
+4
+
+50.86%
+30.96%
+13.13%
+5.05%
+
+39.90%
+41.58%
+9.27%
+9.26%
+
+1.35E8
+2.57E8
+3.79E8
+4.56E8
+
+2.11E8
+4.91E8
+8.66E8
+1.02E9
+
+2.21E8
+
+5.49E8
+
+59.80
+
+4.63E8
+
+1.18E9
+
+60.75
+
+Table 9
+Configurations optimized by GA-based DSE for CINIC-10.
+
+Model (Acc.Drop)
+
+Configurations
+
+ResNet-18
+(1.01%)
+
+ResNet-50
+(−0.10%)
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+0.3
+1
+3
+0.23
+
+0.2
+1
+4
+0.08
+
+2
+5
+0.2
+
+2
+8
+0.09
+
+3
+7
+0.4
+
+3
+14
+0.09
+
+4
+–
+–
+
+4
+–
+–
+
+Table 12
+Speedups of optimized models by existing pruning approaches [2,8,11] on Jetson AGX
+Orin.
+
+Model (Acc.Drop)
+
+Latency (ms)","1. Answer: The three question and answer pairs for the given text are:
+
+Question 1: What is the percentage of FLOPs reduction for the ResNet-18 model with the optimal configuration?
+Answer: The ResNet-18 model with the optimal configuration achieves a FLOPs reduction of 1.01%.
+
+Question 2: What is the percentage of FLOPs reduction for the ResNet-50 model with the optimal configuration?
+Answer: The ResNet-50 model with the optimal configuration achieves a FLOPs reduction of −0.10%.
+
+Question 3: What is the number of FLOPs for the ResNet-18 model with the optimal configuration?
+Answer: The ResNet-18 model with the optimal configuration has 39.90% FLOPs."
+"ResNet-50
+(−0.10%)
+
+Rate
+Stage
+Position
+Threshold
+
+Rate
+Stage
+Position
+Threshold
+
+0.3
+1
+3
+0.23
+
+0.2
+1
+4
+0.08
+
+2
+5
+0.2
+
+2
+8
+0.09
+
+3
+7
+0.4
+
+3
+14
+0.09
+
+4
+–
+–
+
+4
+–
+–
+
+Table 12
+Speedups of optimized models by existing pruning approaches [2,8,11] on Jetson AGX
+Orin.
+
+Model (Acc.Drop)
+
+Latency (ms)
+
+Speedup
+
+Baseline
+
+Filter pruning
+
+ResNet-20
+(2.32%)
+
+ResNet-32
+(1.12%)
+
+ResNet-56
+(0.23%)
+
+ResNet-110
+(0.10%)
+
+6.26
+
+9.55
+
+16.89
+
+32.33
+
+8.70
+
+13.73
+
+22.51
+
+42.59
+
+0.72
+
+0.70
+
+0.75
+
+0.76
+
+Table 10
+Speedups of optimized models by CoAxNN on Jetson AGX Orin.
+
+Model (Acc.Drop)
+
+Latency (ms)
+
+Speedup
+
+Baseline
+
+CoAxNN
+
+Table 13
+Energy reductions of optimized models by existing pruning approaches [2,8,11] on
+Jetson AGX Orin.
+
+Model (Acc.Drop)
+
+Energy (mJ)
+
+Reduction
+
+ResNet-20
+(0.67%)
+
+ResNet-32
+(0.84%)
+
+ResNet-56
+(0.74%)
+
+ResNet-110
+(0.63%)
+
+6.26
+
+9.55
+
+16.89
+
+32.33
+
+4.69
+
+7.11
+
+11.05
+
+21.4
+
+1.33
+
+1.34
+
+1.53
+
+1.51
+
+ResNet-20
+(2.32%)
+
+ResNet-32
+(1.12%)
+
+ResNet-56
+(0.23%)
+
+ResNet-110
+(0.10%)
+
+Baseline
+
+27.89
+
+42.79
+
+76.57","1. What is the percentage of accuracy drop for ResNet-20 after pruning?
+Answer: The percentage of accuracy drop for ResNet-20 after pruning is 2.32%.
+
+    2. What is the percentage of accuracy drop for ResNet-32 after pruning?
+Answer: The percentage of accuracy drop for ResNet-32 after pruning is 1.12%.
+
+    3. What is the percentage of accuracy drop for ResNet-56 after pruning?
+Answer: The percentage of accuracy drop for ResNet-56 after pruning is 0.23%.
+
+Note: All answers are in percentage format."
+"Energy (mJ)
+
+Reduction
+
+ResNet-20
+(0.67%)
+
+ResNet-32
+(0.84%)
+
+ResNet-56
+(0.74%)
+
+ResNet-110
+(0.63%)
+
+6.26
+
+9.55
+
+16.89
+
+32.33
+
+4.69
+
+7.11
+
+11.05
+
+21.4
+
+1.33
+
+1.34
+
+1.53
+
+1.51
+
+ResNet-20
+(2.32%)
+
+ResNet-32
+(1.12%)
+
+ResNet-56
+(0.23%)
+
+ResNet-110
+(0.10%)
+
+Baseline
+
+27.89
+
+42.79
+
+76.57
+
+Filter pruning
+
+45.74
+
+72.47
+
+−63.99%
+
+−69.36%
+
+119.24
+
+−55.73%
+
+146.69
+
+225.34
+
+−53.61%
+
+Table 11
+Energy reductions of optimized models by CoAxNN on Jetson AGX Orin.
+
+Model (Acc.Drop)
+
+Energy (mJ)
+
+Reduction
+
+ResNet-20
+(0.67%)
+
+ResNet-32
+(0.84%)
+
+ResNet-56
+(0.74%)
+
+ResNet-110
+(0.63%)
+
+Baseline
+
+27.89
+
+42.79
+
+76.57
+
+146.69
+
+CoAxNN
+
+20.87
+
+31.8
+
+50.07
+
+97.10
+
+25.17%
+
+25.68%
+
+34.61%
+
+33.81%
+
+Fig. 5. Accuracy of the optimization model at different stages. ‘‘CoAxNN-ALL’’ and
+‘‘CoAxNN-ACT’’ denote the accuracy of the model at each stage on the whole dataset
+and on the images that satisfy the activation condition of the corresponding stage,
+respectively.
+
+JournalofSystemsArchitecture143(2023)10297811G. Li et al.","Question 1: What is the energy reduction of the optimized ResNet-20 model?
+Answer 1: The energy reduction of the optimized ResNet-20 model is 0.67%.
+
+     Question 2: What is the energy reduction of the optimized ResNet-32 model?
+Answer 2: The energy reduction of the optimized ResNet-32 model is 0.84%.
+
+     Question 3: What is the energy reduction of the optimized ResNet-56 model?
+Answer 3: The energy reduction of the optimized ResNet-56 model is 0.74%.
+
+Note: All questions and answers are case-sensitive."
+"‘‘CoAxNN-ACT’’ denote the accuracy of the model at each stage on the whole dataset
+and on the images that satisfy the activation condition of the corresponding stage,
+respectively.
+
+JournalofSystemsArchitecture143(2023)10297811G. Li et al.
+
+Fig. 6. Example images predicated correctly at different stages.
+
+Table 14
+Overheads of GA-based DSE.
+
+Model
+
+ResNet-20
+ResNet-32
+ResNet-56
+ResNet-110
+
+GA time (s)
+
+Training time (s)
+
+1.15
+1.60
+1.69
+1.46
+
+5472
+1813
+2720
+7712
+
+on Jetson AGX Orin. Therefore, the critical motivation of CoAxNN is to
+find a satisfying optimization configuration for practical scenarios.
+
+4.5. Ablation study
+
+Accuracy of CoAxNN models at different stages. We study the accuracy of ResNet-56 optimized by CoAxNN at different stages, as shown
+in Fig. 5. In ‘‘CoAxNN-ALL’’, the accuracy of the model in the first few
+stages is lower than that of the baseline model. As the computational
+complexity of the model increases, the accuracy in the later stages","Question 1: What does ""CoAxNN-ACT"" denote in the given text?
+Answer 1: CoAxNN-ACT denotes the accuracy of the model at each stage on the whole dataset and on the images that satisfy the activation condition of the corresponding stage, respectively.
+
+     Question 2: What is the critical motivation of CoAxNN?
+Answer 2: The critical motivation of CoAxNN is to find a satisfying optimization configuration for practical scenarios.
+
+     Question 3: What does the ablation study in Fig. 5 show?
+Answer 3: The ablation study in Fig. 5 shows the accuracy of ResNet-56 optimized by CoAxNN at different stages, and it shows that the accuracy of the model in the first few stages is lower than that of the baseline model, and as the computational complexity of the model increases, the accuracy in the later stages increases."
+"racy of ResNet-56 optimized by CoAxNN at different stages, as shown
+in Fig. 5. In ‘‘CoAxNN-ALL’’, the accuracy of the model in the first few
+stages is lower than that of the baseline model. As the computational
+complexity of the model increases, the accuracy in the later stages
+gradually converges to that of the baseline model. CoAxNN separates
+the prediction of simple and complex images by conditional activation,
+allowing simple images to exit from the first few stages and complex
+images to exit from the latter stages. In ‘‘CoAxNN-ACT’’, the accuracy
+of the first few stages becomes higher and even exceeds that of the
+baseline model, which indicates that the first few stages have sufficient
+ability to classify simple images. Besides, since complex images are
+predicted by the later stages, the accuracy of the last stage of the
+optimization model is lower than that of the baseline model.
+
+Visualization results at different stages. Fig. 6 depicts the predicted","1. Question: What is the main conclusion that can be drawn from the visualization results in Fig. 5?
+Answer: The main conclusion that can be drawn from the visualization results in Fig. 5 is that the accuracy of the CoAxNN-ALL model gradually converges to that of the baseline model as the computational complexity of the model increases.
+
+2. Question: How does the CoAxNN-ACT model differ from the CoAxNN-ALL model?
+Answer: The CoAxNN-ACT model differs from the CoAxNN-ALL model in that the former has a higher accuracy in the first few stages, indicating that the first few stages have sufficient ability to classify simple images.
+
+3. Question: What can be inferred from the visualization results in Fig. 6?
+Answer: From the visualization results in Fig. 6, it can be inferred that the CoAxNN"
+"ability to classify simple images. Besides, since complex images are
+predicted by the later stages, the accuracy of the last stage of the
+optimization model is lower than that of the baseline model.
+
+Visualization results at different stages. Fig. 6 depicts the predicted
+sample images for each stage of optimized ResNet-56 on CIFAR-10.
+The samples predicated at stage 
+1 are relatively ‘‘easy’’, which have
+a small number of objects and clear background, whereas the samples
+predicated at stage 
+3 are relatively ‘‘hard’’, which have various
+objects and complex background. CoAxNN can separate ‘‘easy’’ images
+consuming less effort from ‘‘hard’’ ones consuming more computation,
+significantly reducing computation costs for neural network models.
+
+2 and 
+
+Overheads of GA-based DSE. We collect the latency of each operator
+of the neural network model on the edge device in the profiling phase
+beforehand to be used in GA-based search. We perform the model","Question 1: What is the main advantage of using CoAxNN?
+Answer 1: CoAxNN can separate ""easy"" images consuming less effort from ""hard"" images consuming more computation, significantly reducing computation costs for neural network models.
+
+     Question 2: What is the main disadvantage of using the baseline model?
+Answer 2: The accuracy of the last stage of the optimization model is lower than that of the baseline model.
+
+     Question 3: What is the purpose of collecting the latency of each operator in the profiling phase?
+Answer 3: We collect the latency of each operator of the neural network model on the edge device in the profiling phase to be used in GA-based search."
+"significantly reducing computation costs for neural network models.
+
+2 and 
+
+Overheads of GA-based DSE. We collect the latency of each operator
+of the neural network model on the edge device in the profiling phase
+beforehand to be used in GA-based search. We perform the model
+optimization processes, including model training and GA-based search,
+on a server with Intel Xeon CPUs and an Nvidia A100 GPU. The
+inference of optimized models is performed on edge devices such as
+Jetson AGX Orin. Table 14 shows the times for GA-based search and
+the time to train the model once during the model optimization. The
+GA-based DSE takes 1–2 s on the CPU platform, which is greatly less
+than model training (e.g., ResNet-20 takes 5472 s for training once).
+Therefore, the runtime overhead of the GA is negligible.
+
+5. Discussion
+
+Generality. CoAxNN is a generic framework for optimizing on-device
+deep learning via model approximation, which can be generalized
+to other intelligent tasks such as object detection [49]. In addition,","Question 1: What are the benefits of GA-based DSE?
+Answer 1: Significantly reducing computation costs for neural network models.
+
+     Question 2: What are the overheads of GA-based DSE?
+Answer 2: The GA-based DSE takes 1–2 s on the CPU platform, which is greatly less than model training.
+
+     Question 3: Can CoAxNN be used for other intelligent tasks?
+Answer 3: Yes, CoAxNN is a generic framework for optimizing on-device deep learning via model approximation, which can be generalized to other intelligent tasks such as object detection.
+
+Note: The questions and answers are generated based on the provided input text, and may not be accurate or complete."
+"Therefore, the runtime overhead of the GA is negligible.
+
+5. Discussion
+
+Generality. CoAxNN is a generic framework for optimizing on-device
+deep learning via model approximation, which can be generalized
+to other intelligent tasks such as object detection [49]. In addition,
+more approximate strategies such as knowledge distillation [50] can
+be integrated into CoAxNN to further optimize neural network models.
+
+Applicability. CoAxNN is system-independent, which not requires specific software implementations and hardware design support. The optimized models by CoAxNN can be directly deployed on the target
+platform, especially intelligent edge accelerators. Users can choose
+the (near)-optimal model according to the accuracy and performance
+requirements of intelligent tasks. Moreover, the time-consuming optimization process can be performed offline on high-performance servers,
+achieving efficient fine-tuning.
+
+Limitations. Although CoAxNN shows the advantages of combining","Question: What is the main advantage of CoAxNN?
+Answer: The main advantage of CoAxNN is that the runtime overhead is negligible.
+
+     Question: Can CoAxNN be applied to other intelligent tasks?
+Answer: Yes, CoAxNN can be applied to other intelligent tasks such as object detection.
+
+     Question: What is the advantage of using CoAxNN?
+Answer: The advantage of using CoAxNN is that it can achieve efficient fine-tuning of neural network models without requiring specific software implementations and hardware design support."
+"requirements of intelligent tasks. Moreover, the time-consuming optimization process can be performed offline on high-performance servers,
+achieving efficient fine-tuning.
+
+Limitations. Although CoAxNN shows the advantages of combining
+staging-based with pruning-based approximate strategies for model
+optimization, there is still room for further improvement. On one hand,
+the NSGA-III used in GA-based DSE cannot always find the optimal
+solutions for the goals of increasing accuracy and decreasing latency.
+We will explore other genetic algorithms such as NPGA [51] for multiobjective optimization. On the other hand, the fixed-rate filter pruning
+strategy is used in CoAxNN. Prior works [11] demonstrated that different layers have different sensitives for model accuracy. Setting different
+pruning ratios for different layers can potentially further improve the
+performance, which will be explored in future studies.
+
+6. Conclusion
+
+In this paper, we proposed an efficient optimization framework,","Question 1: What are the requirements of intelligent tasks?
+Answer 1: The requirements of intelligent tasks include the ability to perform optimization processes efficiently and effectively.
+
+Question 2: What are the limitations of CoAxNN?
+Answer 2: The limitations of CoAxNN include the use of a fixed-rate filter pruning strategy and the inability of the NSGA-III used in GA-based DSE to always find the optimal solutions for increasing accuracy and decreasing latency.
+
+Question 3: What future studies will be explored in CoAxNN?
+Answer 3: Future studies in CoAxNN will include exploring other genetic algorithms such as NPGA for multiobjective optimization and setting different pruning ratios for different layers to further improve performance.
+
+Note: The questions and answers are generated based on the provided text, but they may not be accurate or complete."
+"ent layers have different sensitives for model accuracy. Setting different
+pruning ratios for different layers can potentially further improve the
+performance, which will be explored in future studies.
+
+6. Conclusion
+
+In this paper, we proposed an efficient optimization framework,
+CoAxNN, which effectively combines staging-based with pruning-based
+approximate strategies for efficient model
+inference on resourceconstrained edge devices. Evaluation with state-of-the-art CNN models
+demonstrates the effectiveness of CoAxNN, which can significantly improve the performance with trivial accuracy loss. We plan to integrate
+more model approximate strategies into CoAxNN in future work.
+
+Declaration of competing interest
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to
+influence the work reported in this paper.
+
+Data availability
+
+Data will be made available on request.
+
+JournalofSystemsArchitecture143(2023)10297812G. Li et al.","Question: What are the different sensitives for model accuracy?
+Answer: Different layers have different sensitives for model accuracy.
+
+     Question: What will be explored in future studies?
+Answer: Setting different pruning ratios for different layers can potentially further improve the performance, which will be explored in future studies.
+
+     Question: What is the conclusion of the paper?
+Answer: In this paper, we proposed an efficient optimization framework, CoAxNN, which effectively combines staging-based with pruning-based approximate strategies for efficient model inference on resource-constrained edge devices."

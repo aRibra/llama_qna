@@ -1,0 +1,169 @@
+Question,Answer
+What is reference [1]?,"Reference [1]: K. He, X. Zhang, S. Ren, J. Sun, Deep residual learning for image recognition, in:
+Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition,
+2016, pp. 770–778."
+What is reference [2]?,"Reference [2]: Y. He, G. Kang, X. Dong, Y. Fu, Y. Yang, Soft filter pruning for accelerating
+in: Proceedings of the Twenty-Seventh
+Intelligence (IJCAI), 2018, pp.
+
+deep convolutional neural networks,
+International Joint Conference on Artificial
+2234–2240."
+What is reference [3]?,"Reference [3]: S.K. Esser, J.L. McKinstry, D. Bablani, R. Appuswamy, D.S. Modha, Learned
+step size quantization, in: International Conference on Learning Representations,
+2020."
+What is reference [4]?,"Reference [4]: Y. Guo, A. Yao, Y. Chen, Dynamic network surgery for efficient dnns,
+
+in:
+
+Advances in Neural Information Processing Systems, Vol. 29, 2016."
+What is reference [5]?,"Reference [5]: S. Han, J. Pool, J. Tran, W. Dally, Learning both weights and connections for
+efficient neural network, in: Advances in Neural Information Processing Systems,
+Vol. 28, 2015."
+What is reference [6]?,"Reference [6]: B. Hassibi, D. Stork, Second order derivatives for network pruning: Optimal brain
+surgeon, in: Advances in Neural Information Processing Systems, Vol. 5, 1992."
+What is reference [7]?,"Reference [7]: B. Hassibi, D.G. Stork, G.J. Wolff, Optimal brain surgeon and general network
+pruning, in: IEEE International Conference on Neural Networks, IEEE, 1993, pp.
+293–299."
+What is reference [8]?,"Reference [8]: Y. He, X. Dong, G. Kang, Y. Fu, C. Yan, Y. Yang, Asymptotic soft filter pruning
+for deep convolutional neural networks, IEEE Trans. Cybern. 50 (8) (2019)
+3594–3604."
+What is reference [9]?,"Reference [9]: G. Li, X. Ma, X. Wang, L. Liu, J. Xue, X. Feng, Fusion-catalyzed pruning for
+optimizing deep learning on intelligent edge devices, IEEE Trans. Comput.-Aided
+Des. Integr. Circuits Syst. 39 (11) (2020) 3614–3626."
+What is reference [10]?,"Reference [10]: J.-H. Luo, J. Wu, W. Lin, Thinet: A filter level pruning method for deep neural
+network compression, in: Proceedings of the IEEE International Conference on
+Computer Vision, 2017, pp. 5058–5066."
+What is reference [11]?,"Reference [11]: G. Li, X. Ma, X. Wang, H. Yue, J. Li, L. Liu, X. Feng, J. Xue, Optimizing deep
+neural networks on intelligent edge accelerators via flexible-rate filter pruning,
+J. Syst. Archit. (2022) 102431."
+What is reference [12]?,"Reference [12]: J. Plochaet, T. Goedemé, Hardware-aware pruning for FPGA deep learning
+accelerators, in: Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition, 2023, pp. 4481–4489."
+What is reference [13]?,"Reference [13]: X. Zhuang, Y. Ge, B. Zheng, Q. Wang, Adversarial network pruning by filter
+robustness estimation, in: ICASSP 2023-2023 IEEE International Conference on
+Acoustics, Speech and Signal Processing (ICASSP), IEEE, 2023, pp. 1–5."
+What is reference [14]?,"Reference [14]: Z. Liu, M. Sun, T. Zhou, G. Huang, T. Darrell, Rethinking the value of network
+pruning, in: International Conference on Learning Representations (ICLR), 2019."
+What is reference [15]?,"Reference [15]: Y. Li, K. Adamczewski, W. Li, S. Gu, R. Timofte, L. Van Gool, Revisiting
+random channel pruning for neural network compression, in: Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp.
+191–201."
+What is reference [16]?,"Reference [16]: Y. Li, P. Zhao, G. Yuan, X. Lin, Y. Wang, X. Chen, Pruning-as-search: Efficient
+neural architecture search via channel pruning and structural reparameterization,
+in: Proceedings of the Thirty-First International Joint Conference on Artificial
+Intelligence, 2022, pp. 3236–3242."
+What is reference [17]?,"Reference [17]: Y. Ding, Y. Wu, C. Huang, S. Tang, F. Wu, Y. Yang, W. Zhu, Y. Zhuang, NAP:
+
+Neural architecture search with pruning, Neurocomputing 477 (2022) 85–95."
+What is reference [18]?,"Reference [18]: S. Teerapittayanon, B. McDanel, H.-T. Kung, Branchynet: Fast inference via early
+exiting from deep neural networks, in: 2016 23rd International Conference on
+Pattern Recognition (ICPR), IEEE, 2016, pp. 2464–2469."
+What is reference [19]?,"Reference [19]: P. Panda, A. Sengupta, K. Roy, Conditional deep learning for energy-efficient
+and enhanced pattern recognition, in: 2016 Design, Automation & Test in Europe
+Conference & Exhibition (DATE), IEEE, 2016, pp. 475–480."
+What is reference [20]?,"Reference [20]: Y. Yang, D. Liu, H. Fang, Y.-X. Huang, Y. Sun, Z.-Y. Zhang, Once for all skip:
+efficient adaptive deep neural networks, in: 2022 Design, Automation & Test in
+Europe Conference & Exhibition (DATE), IEEE, 2022, pp. 568–571."
+What is reference [21]?,"Reference [21]: B. Fang, X. Zeng, F. Zhang, H. Xu, M. Zhang, FlexDNN: Input-adaptive on-device
+deep learning for efficient mobile vision, in: 2020 IEEE/ACM Symposium on Edge
+Computing (SEC), IEEE, 2020, pp. 84–95."
+What is reference [22]?,"Reference [22]: Y. Wang, J. Shen, T.-K. Hu, P. Xu, T. Nguyen, R. Baraniuk, Z. Wang, Y. Lin,
+Dual dynamic inference: Enabling more efficient, adaptive, and controllable deep
+inference, IEEE J. Sel. Top. Sign. Proces. 14 (4) (2020) 623–633."
+What is reference [23]?,"Reference [23]: M. Figurnov, M.D. Collins, Y. Zhu, L. Zhang, J. Huang, D. Vetrov, R. Salakhutdi-
+nov, Spatially adaptive computation time for residual networks, in: Proceedings
+of the IEEE Conference on Computer Vision and Pattern Recognition, 2017, pp.
+1039–1048."
+What is reference [24]?,"Reference [24]: N.K. Jayakodi, A. Chatterjee, W. Choi, J.R. Doppa, P.P. Pande, Trading-off
+accuracy and energy of deep inference on embedded systems: A co-design
+approach, IEEE Trans. Comput.-Aided Des. Integr. Circuits Syst. 37 (11) (2018)
+2881–2893."
+What is reference [25]?,"Reference [25]: Z. Liang, Y. Zhou, Dispense mode for inference to accelerate branchynet, in:
+2022 IEEE International Conference on Image Processing (ICIP), IEEE, 2022, pp.
+1246–1250."
+What is reference [26]?,"Reference [26]: J. Jo, G. Kim, S. Kim, J. Park, LoCoExNet: Low-cost early exit network for energy
+efficient CNN accelerator design, IEEE Trans. Comput.-Aided Des. Integr. Circuits
+Syst. (2023)."
+What is reference [27]?,"Reference [27]: K. Park, C. Oh, Y. Yi, Bpnet: branch-pruned conditional neural network for
+systematic time-accuracy tradeoff, in: 2020 57th ACM/IEEE Design Automation
+Conference (DAC), IEEE, 2020, pp. 1–6."
+What is reference [28]?,"Reference [28]: G. Park, Y. Yi, Condnas: neural architecture search for conditional CNNs,
+
+Electronics 11 (7) (2022) 1101."
+What is reference [29]?,"Reference [29]: Y. He, J. Lin, Z. Liu, H. Wang, L.-J. Li, S. Han, Amc: Automl for model
+compression and acceleration on mobile devices, in: Proceedings of the European
+Conference on Computer Vision (ECCV), 2018, pp. 784–800."
+What is reference [30]?,"Reference [30]: Y. Qian, Z. He, Y. Wang, B. Wang, X. Ling, Z. Gu, H. Wang, S. Zeng, W. Swaileh,
+Hierarchical threshold pruning based on uniform response criterion, IEEE Trans.
+Neural Netw. Learn. Syst. (2023)."
+What is reference [31]?,"Reference [31]: K. Wang, D. Zhang, Y. Li, R. Zhang, L. Lin, Cost-effective active learning for deep
+image classification, IEEE Trans. Circuits Syst. Video Technol. 27 (12) (2016)
+2591–2600."
+What is reference [32]?,"Reference [32]: S. Anwar, K. Hwang, W. Sung, Structured pruning of deep convolutional neural
+
+networks, ACM J. Emerg. Technol. Comput. Syst. (JETC) 13 (3) (2017) 1–18."
+What is reference [33]?,"Reference [33]: J.H. Holland, Adaptation in Natural and Artificial Systems: An Introductory
+Analysis with Applications To Biology, Control, and Artificial Intelligence, MIT
+Press, 1992."
+What is reference [34]?,"Reference [34]: A. Mohammadi, H. Asadi, S. Mohamed, K. Nelson, S. Nahavandi, OpenGA, a C++
+genetic algorithm library, in: 2017 IEEE International Conference on Systems,
+Man, and Cybernetics (SMC), IEEE, 2017, pp. 2051–2056."
+What is reference [35]?,"Reference [35]: K. Deb, H. Jain, An evolutionary many-objective optimization algorithm using
+reference-point-based nondominated sorting approach, part I: solving problems
+with box constraints, IEEE Trans. Evol. Comput. 18 (4) (2013) 577–601."
+What is reference [36]?,"Reference [36]: A. Krizhevsky, G. Hinton, et al., Learning multiple layers of features from tiny
+
+images, 2009."
+What is reference [37]?,"Reference [37]: L.N. Darlow, E.J. Crowley, A. Antoniou, A.J. Storkey, Cinic-10 is not imagenet
+
+or cifar-10, 2018, arXiv preprint arXiv:1810.03505."
+What is reference [38]?,"Reference [38]: L. Cai, Z. An, C. Yang, Y. Xu, Softer pruning, incremental regularization, in:
+2020 25th International Conference on Pattern Recognition (ICPR), IEEE, 2021,
+pp. 224–230."
+What is reference [39]?,"Reference [39]: X. Dong, J. Huang, Y. Yang, S. Yan, More is less: A more complicated network
+in: Proceedings of the IEEE Conference on
+
+with less inference complexity,
+Computer Vision and Pattern Recognition, 2017, pp. 5840–5848."
+What is reference [40]?,"Reference [40]: Y. He, P. Liu, Z. Wang, Z. Hu, Y. Yang, Filter pruning via geometric median
+for deep convolutional neural networks acceleration,
+in: Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2019, pp.
+4340–4349."
+What is reference [41]?,"Reference [41]: X. Dong, Y. Yang, Network pruning via transformable architecture search, Adv.
+
+Neural Inf. Process. Syst. 32 (2019)."
+What is reference [42]?,"Reference [42]: Y. He, X. Zhang, J. Sun, Channel pruning for accelerating very deep neural
+networks, in: Proceedings of the IEEE International Conference on Computer
+Vision, 2017, pp. 1389–1397."
+What is reference [43]?,"Reference [43]: S. Lin, R. Ji, C. Yan, B. Zhang, L. Cao, Q. Ye, F. Huang, D. Doermann,
+Towards optimal structured cnn pruning via generative adversarial
+learning,
+in: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition, 2019, pp. 2790–2799."
+What is reference [44]?,"Reference [44]: L. Cai, Z. An, C. Yang, Y. Xu, Soft and hard filter pruning via dimension
+reduction, in: 2021 International Joint Conference on Neural Networks (IJCNN),
+IEEE, 2021, pp. 1–8."
+What is reference [45]?,"Reference [45]: X. Yang, H. Lu, H. Shuai, X.-T. Yuan, Pruning convolutional neural networks
+via stochastic gradient hard thresholding, in: Pattern Recognition and Computer
+Vision: Second Chinese Conference, PRCV 2019, Xi’an, China, November 8–11,
+2019, Proceedings, Part I, Springer, 2019, pp. 373–385."
+What is reference [46]?,"Reference [46]: O. Russakovsky, J. Deng, H. Su, J. Krause, S. Satheesh, S. Ma, Z. Huang, A.
+Karpathy, A. Khosla, M. Bernstein, et al., Imagenet large scale visual recognition
+challenge, Int. J. Comput. Vis. 115 (3) (2015) 211–252."
+What is reference [47]?,"Reference [47]: Y. Chen, X. Wen, Y. Zhang, Q. He, FPC: Filter pruning via the contribution
+of output feature map for deep convolutional neural networks acceleration,
+Knowl.-Based Syst. 238 (2022) 107876."
+What is reference [48]?,"Reference [48]: Y. Chen, X. Wen, Y. Zhang, W. Shi, CCPrune: Collaborative channel pruning for
+
+learning compact convolutional networks, Neurocomputing 451 (2021) 35–45."
+What is reference [49]?,"Reference [49]: X. Chen, H. Ma, J. Wan, B. Li, T. Xia, Multi-view 3d object detection network
+for autonomous driving, in: Proceedings of the IEEE Conference on Computer
+Vision and Pattern Recognition, 2017, pp. 1907–1915."
+What is reference [50]?,"Reference [50]: G. Hinton, O. Vinyals, J. Dean, et al., Distilling the knowledge in a neural
+
+network, arXiv preprint arXiv:1503.02531 2 (7) (2015)."
+What is reference [51]?,"Reference [51]: J. Horn, N. Nafpliotis, D.E. Goldberg, Multiobjective optimization using the
+
+niched Pareto genetic algorithm, 1993"

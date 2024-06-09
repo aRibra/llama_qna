@@ -1,0 +1,123 @@
+python3 domain_knowledge_finetuning.py ^C[?2004l[?2004h[?2004l
+[?2004h(llama2) [01;32maribra@llama2-l4-gpu-20240515[00m:[01;34m~/llama2/paper_13b/pretraining_paper[00m$ [Kclear
+[?2004l[H[2J[?2004h(llama2) [01;32maribra@llama2-l4-gpu-20240515[00m:[01;34m~/llama2/paper_13b/pretraining_paper[00m$ clearpython3 domain_knowledge_finetuning.py 
+[?2004l/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Loading checkpoint shards:   0%|                                                                                      | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|██████████████████████████                                                    | 1/3 [00:03<00:07,  3.55s/it]Loading checkpoint shards:  67%|████████████████████████████████████████████████████                          | 2/3 [00:07<00:03,  3.53s/it]Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████| 3/3 [00:09<00:00,  2.97s/it]Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████| 3/3 [00:09<00:00,  3.12s/it]
+You are calling `save_pretrained` to a 4-bit converted model, but your `bitsandbytes` version doesn't support it. If you want to save 4-bit models, make sure to have `bitsandbytes>=0.41.3` installed.
+/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/peft/utils/other.py:122: FutureWarning: prepare_model_for_int8_training is deprecated and will be removed in a future version. Use prepare_model_for_kbit_training instead.
+  warnings.warn(
+/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/trl/trainer/sft_trainer.py:212: UserWarning: You passed `packing=True` to the SFTTrainer, and you are training your model with `max_steps` strategy. The dataset will be iterated until the `max_steps` are reached.
+  warnings.warn(
+  0%|                                                                                                               | 0/730 [00:00<?, ?it/s]/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/trl/trainer/utils.py:268: UserWarning: The dataset reached end and the iterator is reset to the start.
+  warnings.warn("The dataset reached end and the iterator is reset to the start.")
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+  0%|▏                                                                                                    | 1/730 [00:09<1:50:19,  9.08s/it]  0%|▎                                                                                                    | 2/730 [00:15<1:34:07,  7.76s/it]  0%|▍                                                                                                    | 3/730 [00:22<1:28:56,  7.34s/it]  1%|▌                                                                                                    | 4/730 [00:29<1:26:28,  7.15s/it]  1%|▋                                                                                                    | 5/730 [00:36<1:24:37,  7.00s/it]  1%|▊                                                                                                    | 6/730 [00:43<1:23:17,  6.90s/it]  1%|▉                                                                                                    | 7/730 [00:49<1:22:10,  6.82s/it]  1%|█                                                                                                    | 8/730 [00:56<1:21:27,  6.77s/it]  1%|█▏                                                                                                   | 9/730 [01:03<1:20:54,  6.73s/it]                                                                                                                                            {'loss': 1.6236, 'grad_norm': 0.09364120662212372, 'learning_rate': 0.00019753424657534247, 'epoch': 0.12}
+  1%|█▏                                                                                                   | 9/730 [01:03<1:20:54,  6.73s/it]Traceback (most recent call last):
+  File "/home/aribra/llama2/paper_13b/pretraining_paper/domain_knowledge_finetuning.py", line 83, in <module>
+    trainer.train()
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 1624, in train
+    return inner_training_loop(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 2029, in _inner_training_loop
+    self._maybe_log_save_evaluate(tr_loss, grad_norm, model, trial, epoch, ignore_keys_for_eval)
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 2412, in _maybe_log_save_evaluate
+    metrics = self.evaluate(ignore_keys=ignore_keys_for_eval)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 3229, in evaluate
+    output = eval_loop(
+             ^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 3418, in evaluation_loop
+    loss, logits, labels = self.prediction_step(model, inputs, prediction_loss_only, ignore_keys=ignore_keys)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 3635, in prediction_step
+    loss, outputs = self.compute_loss(model, inputs, return_outputs=True)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/trainer.py", line 2925, in compute_loss
+    outputs = model(**inputs)
+              ^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/utils/operations.py", line 817, in forward
+    return model_forward(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/utils/operations.py", line 805, in __call__
+    return convert_to_fp32(self.model_forward(*args, **kwargs))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/amp/autocast_mode.py", line 16, in decorate_autocast
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/peft/peft_model.py", line 918, in forward
+    return self.base_model(
+           ^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/peft/tuners/tuners_utils.py", line 94, in forward
+    return self.model.forward(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/hooks.py", line 166, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/models/llama/modeling_llama.py", line 1176, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/hooks.py", line 166, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/models/llama/modeling_llama.py", line 1019, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/hooks.py", line 166, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/models/llama/modeling_llama.py", line 755, in forward
+    hidden_states = self.mlp(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/hooks.py", line 166, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/transformers/models/llama/modeling_llama.py", line 241, in forward
+    down_proj = self.down_proj(self.act_fn(self.gate_proj(x)) * self.up_proj(x))
+                                                                ^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/accelerate/hooks.py", line 166, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aribra/miniconda3/envs/llama2/lib/python3.12/site-packages/bitsandbytes/nn/modules.py", line 223, in forward
+    out = out.to(inp_dtype)
+          ^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 432.00 MiB. GPU 
+  1%|          | 9/730 [01:06<1:28:32,  7.37s/it]                                                                                           
+[?2004h(llama2) [01;32maribra@llama2-l4-gpu-20240515[00m:[01;34m~/llama2/paper_13b/pretraining_paper[00m$ [Kexit
+[?2004lexit
