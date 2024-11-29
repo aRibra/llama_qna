@@ -1,6 +1,7 @@
 
 # Evaluation of Fine-Tuning Llama-2 for Domain-specific Question Answering
 
+__Paper__: *"Evaluation of Fine-Tuning Llama-2 for Domain-specific Question Answering"*
 
 ## Llama-2 QnA
 
