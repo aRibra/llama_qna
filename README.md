@@ -7,10 +7,6 @@ __Paper__: *"Evaluation of Fine-Tuning Llama-2 for Domain-specific Question Answ
 
 Llama-2 QnA is a project aimed at fine-tuning the Llama-2 model by Meta for domain-specific question answering. This repository contains code, data, and resources required to adapt and fine-tune the model for answering questions related to specific knowledge domains, such as physics and scientific literature.
 
-## Abstract
-
-Adapting Large Language Models (LLMs) for downstream tasks involves understanding the new knowledge domain and fine-tuning the model for specific tasks. This project employs the Llama-2 model with 7B parameters and fine-tunes it for question-answering tasks using two different datasets: a collection of physics books and a scientific paper. The models successfully learned the new knowledge domains and provided representative answers to queries.
-
 ## Project Structure
 
 ### Directories and Notable Files
@@ -38,12 +34,9 @@ Adapting Large Language Models (LLMs) for downstream tasks involves understandin
 
 - **Domain-Specific Fine-Tuning**: Fine-tunes the Llama-2 model using domain-specific datasets, such as physics books and scientific papers.
 - **Parameter-Efficient Training**: Utilizes QLoRA for memory-efficient fine-tuning with 4-bit quantization, significantly reducing the number of trainable parameters.
-- **Question & Answer Generation**: Generates high-quality Q&A pairs from domain-specific texts using Llama2-7b-chat.
 - **Text Processing**: Efficiently extracts and processes text data from various sources, including books and papers.
 - **Model Evaluation**: Implements rigorous evaluation metrics like Perplexity (PPL) and Rouge to assess model performance.
-- **Scalable Architecture**: Designed to handle multiple queries simultaneously, making it suitable for real-time applications.
-- **Comprehensive Documentation**: Includes detailed notebooks for data processing, model training, and evaluation to facilitate easy replication and experimentation.
-
+  
 ## Installation
 
 1. **Clone the repository**:
@@ -64,20 +57,16 @@ Adapting Large Language Models (LLMs) for downstream tasks involves understandin
     ```bash
     python install_gpu_driver.py
     ```
+### Checkpoints
+The trained models are hosted on Hugging Face from the following https://huggingface.co/ilufy.
 
-## Usage
-
-Run the main script or Jupyter notebooks in the `notebooks` directory to start the QnA system and experiment with the model.
-
-### Example Notebooks
+### Notebooks
 
 - `Physics_book_loader.ipynb`: Load and preprocess physics book data.
 - `QnA_GPT_Generator-coaxnn-paper.ipynb`: Generate QnA pairs using the CoAxNN paper.
 - `QnA_PhysX_Generator.ipynb`: Generate QnA pairs for physics data.
 - `arxiv_loader.ipynb`: Load data from arXiv.
 - `coaxnn_paper_loader.ipynb`: Load and preprocess CoAxNN paper data.
-
-## Methodology
 
 ### Datasets
 
@@ -86,8 +75,8 @@ Run the main script or Jupyter notebooks in the `notebooks` directory to start t
 
 ### Training Process
 
-1. **Text Extraction**: Using PDFMinerLoader and RecursiveCharacterTextSplitter to extract and split text into manageable chunks.
-2. **Q&A Generation**: Using Llama2-7b-chat to generate Q&A pairs from text chunks.
+1. **Text Extraction**: Using `PDFMinerLoader` and `RecursiveCharacterTextSplitter` to extract and split text into manageable chunks.
+2. **Q&A Generation**: Using `Llama2-7b-chat` to generate Q&A pairs from text chunks.
 3. **Fine-Tuning**: Using QLoRA for memory-efficient fine-tuning in 4-bit quantization.
 
 ### Evaluation Metrics
@@ -108,15 +97,6 @@ The fine-tuned models showed significant improvements in domain-specific tasks, 
 - **Rouge Scores**: High Rouge scores indicate better quality and relevance of generated answers.
   - **MK-PhysX-7b-qna**: Achieved 40.57% Rouge-1, 26.15% Rouge-2, and 37.50% Rouge-L at checkpoint 2600.
   - **Paper-7b-qna**: Achieved 70.78% Rouge-1, 62.56% Rouge-2, and 69.20% Rouge-L at checkpoint 360.
-
-### Training Loss
-
-- **MK-PhysX-7b-PT**:
-  - Pre-training (text): Demonstrated a steady decrease in training loss across epochs.
-  - Fine-tuning (Q&A): Further reduced training loss, indicating effective adaptation to the Q&A task.
-- **Paper-7b-PT**:
-  - Pre-training (text): Showed consistent reduction in training loss.
-  - Fine-tuning (Q&A): Achieved lower training loss, confirming successful fine-tuning for the Q&A task.
 
 ### Sample Q&A Responses
 
