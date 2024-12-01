@@ -67,6 +67,8 @@ The trained models are hosted on Hugging Face from the following https://hugging
 - `QnA_PhysX_Generator.ipynb`: Generate QnA pairs for physics data.
 - `arxiv_loader.ipynb`: Load data from arXiv.
 - `coaxnn_paper_loader.ipynb`: Load and preprocess CoAxNN paper data.
+- `physics_books_number_tokens_analyzer-Copy1.ipynb`: Tokens analyzer.
+- `coxnn_number_tokens_analyzer.ipynb`: Tokens analyzer.
 
 ### Datasets
 
