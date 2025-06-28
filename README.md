@@ -1,7 +1,9 @@
 
 # Evaluation of Fine-Tuning Llama-2 for Domain-specific Question Answering
 
-__Paper__: *"Evaluation of Fine-Tuning Llama-2 for Domain-specific Question Answering"*
+__Paper__: *"Evaluation of Fine-Tuning Llama-2 for Domain-specific Question Answering"*  
+__Accepted at__ "6th edition of the Mediterranean Conference on Pattern Recognition and Artificial
+Intelligence (MedPRAI-24)"
 
 ## Llama-2 QnA
 
